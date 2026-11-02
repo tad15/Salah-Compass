@@ -24,7 +24,22 @@ jobs:
           gradle-version: '8.9'
 
       - name: Compiler l'APK
-        run: gradle --no-daemon assembleDebug
+        run: |
+          set -o pipefail
+          gradle --no-daemon assembleDebug 2>&1 | tee build.log
+
+      - name: Publier le journal d'erreur
+        if: failure()
+        run: |
+          tail -n 250 build.log > /tmp/log.txt || true
+          git config user.name ci
+          git config user.email ci@users.noreply.github.com
+          git checkout --orphan build-log
+          git rm -rf . > /dev/null 2>&1 || true
+          cp /tmp/log.txt build-log.txt
+          git add build-log.txt
+          git commit -m "journal de compilation"
+          git push -f origin build-log
 
       - name: Renommer l'APK
         run: cp app/build/outputs/apk/debug/app-debug.apk boussole-qibla.apk
