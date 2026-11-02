@@ -99,7 +99,13 @@ const THEME_LIST = [
   ['dark', 'Sombre', ['#0D1512', '#27382F', '#14574A', '#15211D']],
   ['midnight', 'Bleu minuit', ['#0B1426', '#24365A', '#1E3A70', '#121E36']],
   ['gray', 'Gris clair', ['#E9EAEC', '#CDD0D5', '#3E5C76', '#F7F7F8']],
-  ['black', 'Noir', ['#000000', '#2A2A2A', '#14574A', '#111111']]
+  ['black', 'Noir', ['#000000', '#2A2A2A', '#14574A', '#111111']],
+  ['cream', 'Blanc cassé', ['#F4EFE6', '#D8CFBF', '#0E6B57', '#FBF8F2']],
+  ['violet', 'Violet', ['#14101F', '#3A2F5A', '#4A2F8F', '#1E1830']],
+  ['yellow', 'Jaune', ['#FBF3D0', '#E3D59A', '#7A5A00', '#FFFBE8']],
+  ['pink', 'Rose', ['#F8ECEF', '#E6CBD3', '#A3365F', '#FFF8FA']],
+  ['sky', 'Bleu ciel', ['#E6F0FA', '#C3D6E8', '#1D5FA8', '#F5FAFE']],
+  ['ocean', 'Océan', ['#08202A', '#1F4757', '#0E5E6E', '#0F2D3A']]
 ];
 function themeTile(t) {
   const on = (S.theme || 'auto') === t[0], c = t[2];

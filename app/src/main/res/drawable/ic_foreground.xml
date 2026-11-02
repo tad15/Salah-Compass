@@ -4,15 +4,16 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path
-        android:fillColor="#00000000"
-        android:strokeColor="#F2EFE6"
-        android:strokeWidth="3"
-        android:pathData="M54,54m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0" />
-    <path
-        android:fillColor="#E3A93F"
-        android:pathData="M54,30L61,54L54,78L47,54Z" />
-    <path
-        android:fillColor="#F2EFE6"
-        android:pathData="M54,54m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    <!-- Croissant -->
+    <path android:fillColor="#E3A93F" android:pathData="M53.51,24.01 A10.5 10.5 0 1 0 63.49,38.99 A9 9 0 1 1 53.51,24.01 Z" />
+    <!-- Kaaba : corps -->
+    <path android:fillColor="#1B1B20" android:pathData="M34,52H74V80H34Z" />
+    <!-- Bande dorée -->
+    <path android:fillColor="#E3A93F" android:pathData="M34,58H74V64H34Z" />
+    <path android:fillColor="#B98A24" android:pathData="M38,59.5H46V62.5H38ZM50,59.5H58V62.5H50ZM62,59.5H70V62.5H62Z" />
+    <!-- Porte -->
+    <path android:fillColor="#E3A93F" android:pathData="M57,68H67V80H57Z" />
+    <path android:fillColor="#B98A24" android:pathData="M58.4,69.4H65.6V80H58.4Z" />
+    <!-- Socle -->
+    <path android:fillColor="#F2EFE6" android:pathData="M31,80H77V82.5H31Z" />
 </vector>
