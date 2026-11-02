@@ -20,22 +20,22 @@ function loadQuran() {
   return QD;
 }
 const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '').replace(/([aeiou])\1/g, '$1');
-const chType = c => c.type === 'meccan' ? 'Mecquoise' : 'Médinoise';
-const chSub = c => `${chType(c)} · ${c.total_verses} verset${c.total_verses > 1 ? 's' : ''}`;
+const chType = c => c.type === 'meccan' ? tr('Mecquoise') : tr('Médinoise');
+const chSub = c => `${chType(c)} · ${tr(c.total_verses > 1 ? '{0} versets' : '{0} verset', c.total_verses)}`;
 let QS = { tab: 'sourates', q: '' };
 
 V.coran = () => {
   const html = `
-  <header class="top"><div><h1>Coran</h1><div class="sub">114 sourates · texte arabe et traduction française</div></div></header>
+  <header class="top"><div><h1>${tr('Coran')}</h1><div class="sub">${tr('114 sourates · texte arabe et traduction française')}</div></div></header>
   <div class="stack">
     <div id="resume"></div>
-    <label class="search">${I.search}<input id="qsearch" type="search" placeholder="Rechercher une sourate" value="${esc(QS.q)}" aria-label="Rechercher une sourate" autocomplete="off"></label>
-    <div class="tabs" role="tablist">${[['sourates', 'Sourates'], ['juz', 'Juz’'], ['fav', 'Marque-pages']].map(t => `<button role="tab" data-act="qtab" data-v="${t[0]}" class="${QS.tab === t[0] ? 'on' : ''}" aria-selected="${QS.tab === t[0]}">${t[1]}</button>`).join('')}</div>
-    <div class="card" id="qbody"><div class="empty">Chargement…</div></div>
+    <label class="search">${I.search}<input id="qsearch" type="search" placeholder="${tr('Rechercher une sourate')}" value="${esc(QS.q)}" aria-label="${tr('Rechercher une sourate')}" autocomplete="off"></label>
+    <div class="tabs" role="tablist">${[['sourates', tr('Sourates')], ['juz', tr('Juz’')], ['fav', tr('Marque-pages')]].map(t => `<button role="tab" data-act="qtab" data-v="${t[0]}" class="${QS.tab === t[0] ? 'on' : ''}" aria-selected="${QS.tab === t[0]}">${t[1]}</button>`).join('')}</div>
+    <div class="card" id="qbody"><div class="empty">${tr('Chargement…')}</div></div>
   </div>`;
   return {
     html, mount() {
-      loadQuran().then(() => fillList()).catch(() => { $('#qbody').innerHTML = '<div class="empty">Impossible de charger le texte du Coran.</div>'; });
+      loadQuran().then(() => fillList()).catch(() => { $('#qbody').innerHTML = '<div class="empty">' + tr('Impossible de charger le texte du Coran.') + '</div>'; });
       $('#qsearch').addEventListener('input', e => { QS.q = e.target.value; fillList(); });
     }
   };
@@ -50,7 +50,7 @@ function fillList() {
     if (res) {
       if (S.last && D.ch[S.last.s - 1]) {
         const c = D.ch[S.last.s - 1];
-        res.innerHTML = `<button class="resume" style="width:100%;border:0;text-align:left" data-act="open" data-s="${S.last.s}" data-v="${S.last.v}"><div class="t"><small>Reprendre la lecture</small><b>${esc(c.transliteration)} · verset ${S.last.v}</b></div><span style="transform:scaleX(-1)">${I.back}</span></button>`;
+        res.innerHTML = `<button class="resume" style="width:100%;border:0;text-align:start" data-act="open" data-s="${S.last.s}" data-v="${S.last.v}"><div class="t"><small>${tr('Reprendre la lecture')}</small><b>${tr('{0} · verset {1}', esc(c.transliteration), S.last.v)}</b></div><span class="flipn">${I.back}</span></button>`;
       } else res.innerHTML = '';
     }
     const q = norm(QS.q);
@@ -64,7 +64,7 @@ function fillList() {
       D.juz.forEach(j => {
         const c = D.ch[j.sura - 1];
         if (q && !(String(j.index) === q || norm(c.transliteration).includes(q))) return;
-        html += `<button class="srow" data-act="open" data-s="${j.sura}" data-v="${j.aya}"><span class="num mono">${j.index}</span><span class="nm"><b>Juz’ ${j.index}</b><span>${esc(c.transliteration)}, verset ${j.aya}</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
+        html += `<button class="srow" data-act="open" data-s="${j.sura}" data-v="${j.aya}"><span class="num mono">${j.index}</span><span class="nm"><b>${tr('Juz’ {0}', j.index)}</b><span>${tr('{0}, verset {1}', esc(c.transliteration), j.aya)}</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
       });
     } else {
       let g1 = '', g2 = '';
@@ -76,11 +76,11 @@ function fillList() {
       S.marks.slice().sort((a, b) => { const x = a.split(':').map(Number), y = b.split(':').map(Number); return x[0] - y[0] || x[1] - y[1]; }).forEach(k => {
         const [s, v] = k.split(':').map(Number), c = D.ch[s - 1]; if (!c) return;
         if (q && !norm(c.transliteration).includes(q)) return;
-        g2 += `<button class="srow" data-act="open" data-s="${s}" data-v="${v}"><span class="num">${I.bookmarkOn}</span><span class="nm"><b>${esc(c.transliteration)} · verset ${v}</b><span>Marque-page</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
+        g2 += `<button class="srow" data-act="open" data-s="${s}" data-v="${v}"><span class="num">${I.bookmarkOn}</span><span class="nm"><b>${tr('{0} · verset {1}', esc(c.transliteration), v)}</b><span>${tr('Marque-page')}</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
       });
-      html = (g1 ? '<div class="grp">Sourates</div>' + g1 : '') + (g2 ? '<div class="grp">Versets</div>' + g2 : '');
+      html = (g1 ? '<div class="grp">' + tr('Sourates') + '</div>' + g1 : '') + (g2 ? '<div class="grp">' + tr('Versets') + '</div>' + g2 : '');
     }
-    body.innerHTML = html || `<div class="empty">${QS.tab === 'fav' ? 'Aucun marque-page. Touchez le marque-page en haut d’une sourate, ou celui d’un verset.' : 'Aucun résultat.'}</div>`;
+    body.innerHTML = html || `<div class="empty">${QS.tab === 'fav' ? tr('Aucun marque-page. Touchez le marque-page en haut d’une sourate, ou celui d’un verset.') : tr('Aucun résultat.')}</div>`;
   });
 }
 
@@ -89,25 +89,25 @@ let R = { s: 0, scrollT: 0 };
 V.lire = (s, v) => {
   s = Math.min(114, Math.max(1, +s || 1));
   R.s = s;
-  const html = `<div id="reader"><div class="empty">Chargement de la sourate…</div></div>`;
+  const html = `<div id="reader"><div class="empty">${tr('Chargement de la sourate…')}</div></div>`;
   return {
     html, reader: true, mount() {
-      loadQuran().then(D => buildReader(D, s, v ? +v : 0)).catch(() => { $('#reader').innerHTML = '<div class="empty">Impossible de charger le texte du Coran.</div>'; });
+      loadQuran().then(D => buildReader(D, s, v ? +v : 0)).catch(() => { $('#reader').innerHTML = '<div class="empty">' + tr('Impossible de charger le texte du Coran.') + '</div>'; });
     }, unmount() { clearTimeout(R.scrollT); }
   };
 };
 function verseHtml(D, s, i) {
   const a = D.ar[s][i], f = D.fr[s] && D.fr[s][i], n = a.verse;
   const key = s + ':' + n, on = S.marks.includes(key);
-  let tr = '';
+  let trn = '';
   if (S.trans && f) {
-    tr = `<div class="vfr">${esc(f.text.replace(/^\d+\.\s*/, ''))}</div>`;
-    if (f.footnotes) tr += `<button type="button" class="vnote" id="n${n}" data-act="note" data-v="${n}" aria-label="Refermer la note" hidden>${esc(f.footnotes)}<span class="close">${I.up} Refermer</span></button>`;
+    trn = `<div class="vfr" lang="fr" dir="ltr">${esc(f.text.replace(/^\d+\.\s*/, ''))}</div>`;
+    if (f.footnotes) trn += `<button type="button" class="vnote" lang="fr" dir="ltr" id="n${n}" data-act="note" data-v="${n}" aria-label="${tr('Refermer la note')}" hidden>${esc(f.footnotes)}<span class="close">${I.up} ${tr('Refermer')}</span></button>`;
   }
   return `<article class="verse${PL.s === s && PL.v === n ? ' cur' : ''}" id="v${n}" data-v="${n}">
-    <div class="vtop"><span class="vnum ar" aria-label="Verset ${n}">${arNum(n)}</span><div class="vtext ar" lang="ar" dir="rtl" style="font-size:${S.size}px">${esc(a.text)}</div></div>
-    ${tr}
-    <div class="vact"><button data-act="playV" data-v="${n}" aria-label="Écouter le verset ${n}">${I.play}</button><button data-act="mark" data-v="${n}" class="${on ? 'on' : ''}" aria-pressed="${on}" aria-label="Marque-page, verset ${n}">${on ? I.bookmarkOn : I.bookmark}</button>${S.trans && f && f.footnotes ? `<button class="nb" data-act="note" data-v="${n}" aria-expanded="false" aria-label="Notes du verset ${n}">${I.note} Notes</button>` : ''}</div>
+    <div class="vtop"><span class="vnum ar" aria-label="${tr('Verset {0}', n)}">${arNum(n)}</span><div class="vtext ar" lang="ar" dir="rtl" style="font-size:${S.size}px">${esc(a.text)}</div></div>
+    ${trn}
+    <div class="vact"><button data-act="playV" data-v="${n}" aria-label="${tr('Écouter le verset {0}', n)}">${I.play}</button><button data-act="mark" data-v="${n}" class="${on ? 'on' : ''}" aria-pressed="${on}" aria-label="${tr('Marque-page, verset {0}', n)}">${on ? I.bookmarkOn : I.bookmark}</button>${S.trans && f && f.footnotes ? `<button class="nb" data-act="note" data-v="${n}" aria-expanded="false" aria-label="${tr('Notes du verset {0}', n)}">${I.note} ${tr('Notes')}</button>` : ''}</div>
   </article>`;
 }
 function buildReader(D, s, startV) {
@@ -115,18 +115,18 @@ function buildReader(D, s, startV) {
   const verses = D.ar[s].map((_, i) => verseHtml(D, s, i)).join('');
   $('#reader').innerHTML = `
   <div class="rhead">
-    <a class="icon-btn" href="javascript:history.back()" aria-label="Retour à la liste des sourates" style="margin-left:-8px">${I.back}</a>
-    <div class="t"><h1>${esc(c.transliteration)}</h1><div class="sub">Sourate ${c.id} · ${chSub(c)}</div></div>
-    <button class="icon-btn${fav ? '' : ''}" data-act="fav" aria-pressed="${fav}" aria-label="${fav ? 'Retirer la sourate des marque-pages' : 'Ajouter la sourate aux marque-pages'}" style="color:${fav ? 'var(--brass-text)' : 'inherit'}">${fav ? I.bookmarkOn : I.bookmark}</button>
+    <a class="icon-btn flip" href="javascript:history.back()" aria-label="${tr('Retour à la liste des sourates')}" style="margin-inline-start:-8px">${I.back}</a>
+    <div class="t"><h1>${esc(c.transliteration)}</h1><div class="sub">${tr('Sourate {0}', c.id)} · ${chSub(c)}</div></div>
+    <button class="icon-btn${fav ? '' : ''}" data-act="fav" aria-pressed="${fav}" aria-label="${fav ? tr('Retirer la sourate des marque-pages') : tr('Ajouter la sourate aux marque-pages')}" style="color:${fav ? 'var(--brass-text)' : 'inherit'}">${fav ? I.bookmarkOn : I.bookmark}</button>
     <span class="ar" lang="ar" dir="rtl" style="font-size:32px;line-height:1;font-weight:700;color:var(--accent)">${c.name}</span>
   </div>
   <div class="ctrls">
-    <button class="pill-btn" data-act="size"><span class="ar" aria-hidden="true" style="font-size:18px;font-weight:700">أ</span>Taille du texte</button>
-    <button class="pill-btn" data-act="trans" aria-pressed="${S.trans}"><span class="sw${S.trans ? ' on' : ''}"></span>Traduction</button>
+    <button class="pill-btn" data-act="size"><span class="ar" aria-hidden="true" style="font-size:18px;font-weight:700">أ</span>${tr('Taille du texte')}</button>
+    <button class="pill-btn" data-act="trans" aria-pressed="${S.trans}"><span class="sw${S.trans ? ' on' : ''}"></span>${tr('Traduction')}</button>
   </div>
-  <select class="sel" data-chg="readReciter" aria-label="Récitateur">${RECITERS.map(r => `<option value="${r[0]}"${r[0] === S.reciter ? ' selected' : ''}>Récitation : ${esc(r[1])}</option>`).join('')}</select>
-  <section class="card verses" aria-label="Texte de la sourate">${verses}</section>
-  <div class="sub" style="margin-top:12px;font-size:12px">Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : Dr Nabil Rudwan, Noor International Center, via QuranEnc.com. <a href="#/apropos" style="text-decoration:underline">Détails</a></div>`;
+  <select class="sel" data-chg="readReciter" aria-label="${tr('Récitateur')}">${RECITERS.map(r => `<option value="${r[0]}"${r[0] === S.reciter ? ' selected' : ''}>${tr('Récitation : {0}', esc(r[1]))}</option>`).join('')}</select>
+  <section class="card verses" aria-label="${tr('Texte de la sourate')}">${verses}</section>
+  <div class="sub" style="margin-top:12px;font-size:12px">${tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : Dr Nabil Rudwan, Noor International Center, via QuranEnc.com. ')}<a href="#/apropos" style="text-decoration:underline">${tr('Détails')}</a></div>`;
   if (!S.last || S.last.s !== s || startV) S.last = { s, v: startV || 1 };
   save();
   const view = $('#view');
@@ -152,7 +152,7 @@ function reRenderReader() {
 ACT.fav = el => {
   const i = S.fav.indexOf(R.s); if (i >= 0) S.fav.splice(i, 1); else S.fav.push(R.s); save();
   const on = i < 0; el.setAttribute('aria-pressed', on); el.style.color = on ? 'var(--brass-text)' : 'inherit'; el.innerHTML = on ? I.bookmarkOn : I.bookmark;
-  toast(on ? 'Sourate ajoutée aux marque-pages.' : 'Sourate retirée des marque-pages.');
+  toast(on ? tr('Sourate ajoutée aux marque-pages.') : tr('Sourate retirée des marque-pages.'));
 };
 ACT.size = () => { S.size = SIZES[(SIZES.indexOf(S.size) + 1) % SIZES.length] || 28; save(); $$('.vtext').forEach(e => { e.style.fontSize = S.size + 'px'; }); };
 ACT.trans = el => { S.trans = !S.trans; save(); el.setAttribute('aria-pressed', S.trans); $('.sw', el).classList.toggle('on', S.trans); reRenderReader(); };
@@ -160,7 +160,7 @@ ACT.mark = el => {
   const key = R.s + ':' + el.dataset.v, i = S.marks.indexOf(key);
   if (i >= 0) S.marks.splice(i, 1); else S.marks.push(key); save();
   const on = i < 0; el.classList.toggle('on', on); el.setAttribute('aria-pressed', on); el.innerHTML = on ? I.bookmarkOn : I.bookmark;
-  toast(on ? 'Marque-page ajouté.' : 'Marque-page retiré.');
+  toast(on ? tr('Marque-page ajouté.') : tr('Marque-page retiré.'));
 };
 ACT.note = el => {
   const v = el.dataset.v, n = $('#n' + v); if (!n) return;
@@ -188,9 +188,9 @@ function playVerse(s, v, withBasmala) {
 AUD.onended = () => {
   if (PL.basm) { PL.basm = false; AUD.src = audioSrc(PL.s, PL.v); AUD.play().catch(() => { }); return; }
   if (PL.v < totalOf(PL.s)) playVerse(PL.s, PL.v + 1, false);
-  else { PL.playing = false; markCurrent(); renderPlayer(); toast('Fin de la sourate.'); }
+  else { PL.playing = false; markCurrent(); renderPlayer(); toast(tr('Fin de la sourate.')); }
 };
-AUD.onerror = () => { if (!PL.s) return; PL.playing = false; renderPlayer(); toast('Récitation indisponible : vérifiez la connexion Internet.'); };
+AUD.onerror = () => { if (!PL.s) return; PL.playing = false; renderPlayer(); toast(tr('Récitation indisponible : vérifiez la connexion Internet.')); };
 function markCurrent() {
   $$('.verse.cur').forEach(e => e.classList.remove('cur'));
   if (R.s === PL.s && PL.s) {
@@ -211,11 +211,11 @@ function renderPlayer() {
   const ch = CHAPTERS ? CHAPTERS[s - 1] : null;
   box.classList.add('show');
   box.innerHTML = `
-    <button class="pp" data-act="pp" aria-label="${PL.playing ? 'Mettre en pause la récitation' : 'Lancer la récitation'}">${PL.playing ? I.pause : I.play}</button>
-    <button class="mid" data-act="openPl"><span class="l1">Récitation${ch ? ' · ' + esc(ch.transliteration) : ''}</span><span class="l2 mono">${active ? 'Verset ' + v + ' sur ' + tot : 'Touchez ▶ pour écouter'}</span><span class="pbar"><i style="width:${active && tot ? v / tot * 100 : 0}%"></i></span></button>
-    <button class="ib" data-act="plPrev" aria-label="Verset précédent">${I.prev}</button>
-    <button class="ib" data-act="plNext" aria-label="Verset suivant">${I.next}</button>
-    ${active ? `<button class="ib" data-act="plStop" aria-label="Arrêter la récitation">${I.close}</button>` : ''}`;
+    <button class="pp" data-act="pp" aria-label="${PL.playing ? tr('Mettre en pause la récitation') : tr('Lancer la récitation')}">${PL.playing ? I.pause : I.play}</button>
+    <button class="mid" data-act="openPl"><span class="l1">${tr('Récitation')}${ch ? ' · ' + esc(ch.transliteration) : ''}</span><span class="l2 mono">${active ? tr('Verset {0} sur {1}', v, tot) : tr('Touchez ▶ pour écouter')}</span><span class="pbar"><i style="width:${active && tot ? v / tot * 100 : 0}%"></i></span></button>
+    <button class="ib" data-act="plPrev" aria-label="${tr('Verset précédent')}">${I.prev}</button>
+    <button class="ib" data-act="plNext" aria-label="${tr('Verset suivant')}">${I.next}</button>
+    ${active ? `<button class="ib" data-act="plStop" aria-label="${tr('Arrêter la récitation')}">${I.close}</button>` : ''}`;
 }
 ACT.pp = () => {
   if (!PL.s) { playVerse(R.s, firstVisible()); return; }

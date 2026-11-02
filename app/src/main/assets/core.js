@@ -49,7 +49,7 @@ const DEFAULTS = {
   auto: true, cityIdx: 1, method: 'UOIF', asr: 1, hijriAdj: 0,
   remind: true,
   modes: { fajr: 'adhan', dhuhr: 'adhan', asr: 'adhan', maghrib: 'adhan', isha: 'adhan' },
-  pre: 0, vol: 0.8, vibrate: true,
+  pre: 0, vol: 0.8, lang: null, vibrate: true,
   trans: true, size: 28, reciter: 'Alafasy_128kbps',
   theme: 'auto', lastPos: null, fav: [], marks: [], last: null, askedNotif: false
 };
@@ -105,10 +105,10 @@ function nearestCity(lat, lng) {
 function loc() {
   if (S.auto && S.lastPos) {
     const n = nearestCity(S.lastPos.lat, S.lastPos.lng);
-    return { name: n || 'Ma position', lat: S.lastPos.lat, lng: S.lastPos.lng, tz: DEVICE_TZ, auto: true };
+    return { name: n ? tr(n) : tr('Ma position'), lat: S.lastPos.lat, lng: S.lastPos.lng, tz: DEVICE_TZ, auto: true };
   }
   const c = CITIES[S.cityIdx] || CITIES[1];
-  return { name: c[0], lat: c[1], lng: c[2], tz: c[3], auto: false };
+  return { name: tr(c[0]), lat: c[1], lng: c[2], tz: c[3], auto: false };
 }
 
 /* ====== Fuseaux, dates ====== */
@@ -125,11 +125,13 @@ function datePartsIn(tz, ms) {
   const p = {}; f.formatToParts(new Date(ms)).forEach(x => { p[x.type] = x.value; });
   return { y: +p.year, m: +p.month, d: +p.day };
 }
-const MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-const DAYS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+const _fm = (o, d) => new Intl.DateTimeFormat(LOCALE + '-u-ca-gregory-nu-latn', Object.assign({ timeZone: 'UTC' }, o)).format(d);
+const MONTHS = Array.from({ length: 12 }, (_, i) => _fm({ month: 'long' }, new Date(Date.UTC(2021, i, 15))));
+const DAYS = Array.from({ length: 7 }, (_, i) => _fm({ weekday: 'long' }, new Date(Date.UTC(2021, 7, 1 + i))));
+const DOW_SHORT = Array.from({ length: 7 }, (_, i) => _fm({ weekday: 'short' }, new Date(Date.UTC(2021, 7, 2 + i)))); // lundi en premier
 function dow(y, m, d) { return new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay(); }
 function fmtClock(ms, tz) {
-  return new Intl.DateTimeFormat('fr-FR', { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(ms));
+  return new Intl.DateTimeFormat(LOCALE + '-u-nu-latn', { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(ms));
 }
 function hfmt(h) { h = ((h % 24) + 24) % 24; h = Math.round(h * 60) / 60; const H = Math.floor(h + 1e-9), M = Math.round((h - H) * 60); return M === 60 ? pad((H + 1) % 24) + ':00' : pad(H) + ':' + pad(M); }
 function utcLabel(off) { const s = off >= 0 ? '+' : '−'; const a = Math.abs(off); const h = Math.floor(a), m = Math.round((a - h) * 60); return 'UTC' + s + h + (m ? ':' + pad(m) : ''); }
@@ -137,7 +139,7 @@ function utcLabel(off) { const s = off >= 0 ? '+' : '−'; const a = Math.abs(of
 /* ====== Hégire ====== */
 function hijriOf(y, m, d) {
   try {
-    const f = new Intl.DateTimeFormat('fr-FR-u-ca-islamic-umalqura-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const f = new Intl.DateTimeFormat(LOCALE + '-u-ca-islamic-umalqura-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
     const p = {}; f.formatToParts(new Date(Date.UTC(y, m - 1, d + (S.hijriAdj || 0), 12))).forEach(x => { p[x.type] = x.value; });
     return { d: +p.day, month: cap(p.month), y: p.year };
   } catch (e) { return { d: '', month: '', y: '' }; }
@@ -158,12 +160,12 @@ function sunPos(jd) {
   return { decl: asn(sn(e) * sn(L)), eqt: q / 15 - fixH(RA) };
 }
 const METHODS = {
-  UOIF: { n: 'UOIF (France) · 12°', f: 12, i: 12 },
-  MWL: { n: 'Ligue islamique mondiale · 18° / 17°', f: 18, i: 17 },
-  ISNA: { n: 'ISNA · 15°', f: 15, i: 15 },
-  EGY: { n: 'Égypte · 19,5° / 17,5°', f: 19.5, i: 17.5 },
-  UMM: { n: 'Umm al-Qura · 18,5° / Isha +90 min', f: 18.5, im: 90 },
-  TUR: { n: 'Diyanet (Turquie) · 18° / 17°', f: 18, i: 17 }
+  UOIF: { n: tr('UOIF (France) · 12°'), f: 12, i: 12 },
+  MWL: { n: tr('Ligue islamique mondiale · 18° / 17°'), f: 18, i: 17 },
+  ISNA: { n: tr('ISNA · 15°'), f: 15, i: 15 },
+  EGY: { n: tr('Égypte · 19,5° / 17,5°'), f: 19.5, i: 17.5 },
+  UMM: { n: tr('Umm al-Qura · 18,5° / Isha +90 min'), f: 18.5, im: 90 },
+  TUR: { n: tr('Diyanet (Turquie) · 18° / 17°'), f: 18, i: 17 }
 };
 /** Heures décimales locales pour le jour civil (y,m,d) */
 function rawTimes(y, m, d, L) {
@@ -185,7 +187,7 @@ function rawTimes(y, m, d, L) {
 }
 const ORDER = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
 const FIVE = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
-const PNAME = { fajr: 'Fajr', sunrise: 'Lever du soleil', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Isha' };
+const PNAME = PNAMES[LANG];
 const PAR = { fajr: 'الفجر', sunrise: 'الشروق', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء' };
 /** {fajr:{h,t,str},...} avec t = instant absolu (ms) */
 function dayTimes(y, m, d, L) {
@@ -223,8 +225,8 @@ function buildSchedule() {
     const p = shiftDay(t0, n), dt = dayTimes(p.y, p.m, p.d, L);
     FIVE.forEach(k => {
       const mode = S.modes[k]; if (mode === 'off' || isNaN(dt[k].t)) return;
-      if (S.pre > 0 && dt[k].t - S.pre * 60000 > now) out.push({ t: dt[k].t - S.pre * 60000, title: PNAME[k] + ' dans ' + S.pre + ' min', text: 'Prière de ' + PNAME[k] + ' à ' + dt[k].str + ' (' + L.name + ')', mode: 'notif' });
-      if (dt[k].t > now) out.push({ t: dt[k].t, title: 'Il est l’heure de la prière de ' + PNAME[k], text: PNAME[k] + ' · ' + dt[k].str + ' · ' + L.name, mode });
+      if (S.pre > 0 && dt[k].t - S.pre * 60000 > now) out.push({ t: dt[k].t - S.pre * 60000, title: tr('{0} dans {1} min', PNAME[k], S.pre), text: tr('Prière de {0} à {1} ({2})', PNAME[k], dt[k].str, L.name), mode: 'notif' });
+      if (dt[k].t > now) out.push({ t: dt[k].t, title: tr('Il est l’heure de la prière de {0}', PNAME[k]), text: PNAME[k] + ' · ' + dt[k].str + ' · ' + L.name, mode });
     });
   }
   return out;

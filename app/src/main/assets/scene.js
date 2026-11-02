@@ -48,7 +48,7 @@
     const { t, R, S } = o, uid = o.uid || 'sc', H = 170;
     const sk = sky(t, R, S), d = sk.d, w = sk.w;
     const T = c => mix(mix(c, '#0B1228', d * 0.6), '#F08A4B', w * 0.22 * (1 - d));
-    let s = `<svg viewBox="0 0 390 230" width="100%" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Cour de la Kaaba, ${d > 0.6 ? 'de nuit' : d > 0.2 ? 'au crépuscule' : 'de jour'}" class="scene" style="display:block">`;
+    let s = `<svg viewBox="0 0 390 230" width="100%" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${d > 0.6 ? tr('Cour de la Kaaba, de nuit') : d > 0.2 ? tr('Cour de la Kaaba, au crépuscule') : tr('Cour de la Kaaba, de jour')}" class="scene" style="display:block">`;
     s += `<defs><linearGradient id="${uid}sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sk.top}"/><stop offset="1" stop-color="${sk.bot}"/></linearGradient>`;
     s += `<radialGradient id="${uid}sg"><stop offset="0" stop-color="#FFE9A8" stop-opacity=".85"/><stop offset="1" stop-color="#FFE9A8" stop-opacity="0"/></radialGradient>`;
     s += `<radialGradient id="${uid}mg"><stop offset="0" stop-color="#DDE8FF" stop-opacity=".45"/><stop offset="1" stop-color="#DDE8FF" stop-opacity="0"/></radialGradient>`;
