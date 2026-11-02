@@ -51,7 +51,7 @@ const DEFAULTS = {
   modes: { fajr: 'adhan', dhuhr: 'adhan', asr: 'adhan', maghrib: 'adhan', isha: 'adhan' },
   pre: 0, vol: 0.8, vibrate: true,
   trans: true, size: 28, reciter: 'Alafasy_128kbps',
-  lastPos: null, fav: [], marks: [], last: null, askedNotif: false
+  theme: 'auto', lastPos: null, fav: [], marks: [], last: null, askedNotif: false
 };
 let S = (() => {
   let s = {};
@@ -60,6 +60,8 @@ let S = (() => {
   m.modes = Object.assign({}, DEFAULTS.modes, s.modes || {});
   return m;
 })();
+function applyTheme() { const r = document.documentElement; if (S.theme && S.theme !== 'auto') r.dataset.theme = S.theme; else delete r.dataset.theme; }
+applyTheme();
 function save() { try { localStorage.setItem('qs', JSON.stringify(S)); } catch (e) { /* ignoré */ } }
 
 /* ====== Villes ====== */

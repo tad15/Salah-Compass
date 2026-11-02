@@ -43,13 +43,7 @@ V.prieres = () => {
     }
   });
   const html = `
-  <header class="top">
-    <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
-      <h1>Prières</h1>
-      <span class="chip" style="align-self:flex-start">${I.pin}${esc(L.name)}</span>
-    </div>
-    <a class="icon-btn" href="#/reglages" aria-label="Réglages">${I.gear}</a>
-  </header>
+  <div class="scenebox" id="scenebox">${sceneHtml(a, now, L)}<div class="scenebar"><span class="chip glass">${I.pin}${esc(L.name)}</span><a class="icon-btn glass" href="#/reglages" aria-label="Réglages">${I.gear}</a></div></div>
   <div class="stack">
     <div><div style="font-size:17px;font-weight:600">${cap(DAYS[dw])} ${t.d} ${MONTHS[t.m - 1]} ${t.y}</div><div class="sub">${esc(hijriStr(t.y, t.m, t.d))}</div></div>
     ${permBanner()}
@@ -65,7 +59,22 @@ V.prieres = () => {
   </div>`;
   return { html, mount() { }, tick() { tickPrayers(); } };
 };
+function sceneHtml(a, now, L) {
+  const sr = a.today.sunrise, mg = a.today.maghrib;
+  const R = isNaN(sr.h) ? 420 : sr.h * 60, Sx = isNaN(mg.h) ? 1020 : mg.h * 60;
+  let t = isNaN(sr.t) ? 720 : R + (now - sr.t) / 60000;
+  t = ((t % 1440) + 1440) % 1440;
+  return Scene.sceneSvg({ t, R, S: Sx, ms: now, phase: now / 1000, uid: 'sc' });
+}
+let SCENE_MIN = -1;
 function tickPrayers() {
+  const box = $('#scenebox');
+  const mn = Math.floor(Date.now() / 60000);
+  if (box && mn !== SCENE_MIN) {
+    SCENE_MIN = mn;
+    const L = loc(), now = Date.now(), a = around(now, L), svg = box.querySelector(':scope > svg.scene');
+    if (svg) { const tmp = document.createElement('div'); tmp.innerHTML = sceneHtml(a, now, L); svg.replaceWith(tmp.firstChild); }
+  }
   const hero = $('.hero'); if (!hero) return;
   const now = Date.now(), a = around(now, loc());
   if (String(a.next.t) !== hero.dataset.nt) { render(true); return; }
@@ -84,6 +93,21 @@ function askNotif() { try { AndroidApp.requestNotifPermission(); } catch (e) { /
 ACT.askNotif = () => { askNotif(); toast('Autorisez les notifications dans la fenêtre Android.'); };
 
 /* ====== Réglages ====== */
+const THEME_LIST = [
+  ['auto', 'Automatique', null],
+  ['light', 'Clair', ['#EBEFED', '#C9D3CE', '#0E6B57', '#F8FAF9']],
+  ['dark', 'Sombre', ['#0D1512', '#27382F', '#14574A', '#15211D']],
+  ['midnight', 'Bleu minuit', ['#0B1426', '#24365A', '#1E3A70', '#121E36']],
+  ['gray', 'Gris clair', ['#E9EAEC', '#CDD0D5', '#3E5C76', '#F7F7F8']],
+  ['black', 'Noir', ['#000000', '#2A2A2A', '#14574A', '#111111']]
+];
+function themeTile(t) {
+  const on = (S.theme || 'auto') === t[0], c = t[2];
+  const pv = c ? `<span class="pv" style="background:${c[0]};border-color:${c[1]}"><i class="h" style="background:${c[2]}"></i><i style="background:${c[3]};width:75%"></i><i style="background:${c[3]};width:50%"></i></span>`
+    : '<span class="pv" style="background:linear-gradient(135deg,#EBEFED 50%,#0D1512 50%);border-color:#8CA197"></span>';
+  return `<button class="tile${on ? ' on' : ''}" data-act="setTheme" data-v="${t[0]}" aria-pressed="${on}">${pv}<b>${t[1]}</b>${on ? `<span class="ck">${I.check.replace('width="22" height="22"', 'width="12" height="12"').replace('<circle cx="12" cy="12" r="10"/>', '')}</span>` : ''}</button>`;
+}
+ACT.setTheme = el => { S.theme = el.dataset.v; save(); applyTheme(); render(true); };
 let previewAudio = null;
 function stopPreview() { if (previewAudio) { previewAudio.pause(); previewAudio = null; } }
 let ADHAN_SHOWN = 'false';
@@ -103,6 +127,7 @@ V.reglages = () => {
     <div style="display:flex;align-items:center;gap:4px;margin-left:-8px"><a class="icon-btn" href="javascript:history.back()" aria-label="Retour">${I.back}</a><h1>Réglages</h1></div>
   </header>
   <div class="stack">
+    <div class="sec"><h2>Apparence</h2><div class="themes">${THEME_LIST.map(t => themeTile(t)).join('')}</div><div class="sub" style="padding:2px 4px;font-size:13px">« Automatique » suit le mode clair ou sombre du téléphone.</div></div>
     <div class="sec"><h2>Position</h2><div class="card set">${posRows}</div></div>
     <div class="sec"><h2>Calcul des horaires</h2><div class="card set">
       <div class="srow2"><div class="l"><b>Méthode</b></div><select data-chg="method" aria-label="Méthode de calcul">${Object.keys(METHODS).map(k => `<option value="${k}"${k === S.method ? ' selected' : ''}>${esc(METHODS[k].n)}</option>`).join('')}</select></div>
@@ -125,7 +150,7 @@ V.reglages = () => {
       <div class="srow2"><div class="l"><b>Récitateur</b></div><select data-chg="reciter" aria-label="Récitateur">${RECITERS.map(r => `<option value="${r[0]}"${r[0] === S.reciter ? ' selected' : ''}>${esc(r[1])}</option>`).join('')}</select></div>
     </div></div>
     <a class="pill-btn" href="#/apropos">À propos, sources et licences</a>
-    <div class="sub" style="text-align:center">Version 2.1 · aucune publicité, aucun compte</div>
+    <div class="sub" style="text-align:center">Version 2.2 · aucune publicité, aucun compte</div>
   </div>`;
   return { html, mount() { }, tick() { if (NATIVE && String(adhanOn()) !== ADHAN_SHOWN) render(true); } };
 };
