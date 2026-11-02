@@ -30,7 +30,7 @@ V.coran = () => {
   <div class="stack">
     <div id="resume"></div>
     <label class="search">${I.search}<input id="qsearch" type="search" placeholder="Rechercher une sourate" value="${esc(QS.q)}" aria-label="Rechercher une sourate" autocomplete="off"></label>
-    <div class="tabs" role="tablist">${[['sourates', 'Sourates'], ['juz', 'Juz’'], ['fav', 'Favoris']].map(t => `<button role="tab" data-act="qtab" data-v="${t[0]}" class="${QS.tab === t[0] ? 'on' : ''}" aria-selected="${QS.tab === t[0]}">${t[1]}</button>`).join('')}</div>
+    <div class="tabs" role="tablist">${[['sourates', 'Sourates'], ['juz', 'Juz’'], ['fav', 'Marque-pages']].map(t => `<button role="tab" data-act="qtab" data-v="${t[0]}" class="${QS.tab === t[0] ? 'on' : ''}" aria-selected="${QS.tab === t[0]}">${t[1]}</button>`).join('')}</div>
     <div class="card" id="qbody"><div class="empty">Chargement…</div></div>
   </div>`;
   return {
@@ -67,17 +67,20 @@ function fillList() {
         html += `<button class="srow" data-act="open" data-s="${j.sura}" data-v="${j.aya}"><span class="num mono">${j.index}</span><span class="nm"><b>Juz’ ${j.index}</b><span>${esc(c.transliteration)}, verset ${j.aya}</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
       });
     } else {
+      let g1 = '', g2 = '';
       S.fav.slice().sort((a, b) => a - b).forEach(n => {
         const c = D.ch[n - 1]; if (!c) return;
         if (q && !norm(c.transliteration).includes(q)) return;
-        html += `<button class="srow" data-act="open" data-s="${c.id}"><span class="num mono">${c.id}</span><span class="nm"><b>${esc(c.transliteration)}</b><span>Sourate favorite · ${chSub(c)}</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
+        g1 += `<button class="srow" data-act="open" data-s="${c.id}"><span class="num">${I.bookmarkOn}</span><span class="nm"><b>${esc(c.transliteration)}</b><span>${chSub(c)}</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
       });
-      S.marks.slice().sort().forEach(k => {
+      S.marks.slice().sort((a, b) => { const x = a.split(':').map(Number), y = b.split(':').map(Number); return x[0] - y[0] || x[1] - y[1]; }).forEach(k => {
         const [s, v] = k.split(':').map(Number), c = D.ch[s - 1]; if (!c) return;
-        html += `<button class="srow" data-act="open" data-s="${s}" data-v="${v}"><span class="num">${I.bookmarkOn}</span><span class="nm"><b>${esc(c.transliteration)} · verset ${v}</b><span>Marque-page</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
+        if (q && !norm(c.transliteration).includes(q)) return;
+        g2 += `<button class="srow" data-act="open" data-s="${s}" data-v="${v}"><span class="num">${I.bookmarkOn}</span><span class="nm"><b>${esc(c.transliteration)} · verset ${v}</b><span>Marque-page</span></span><span class="a ar" lang="ar" dir="rtl">${c.name}</span></button>`;
       });
+      html = (g1 ? '<div class="grp">Sourates</div>' + g1 : '') + (g2 ? '<div class="grp">Versets</div>' + g2 : '');
     }
-    body.innerHTML = html || `<div class="empty">${QS.tab === 'fav' ? 'Aucun favori. Touchez l’étoile dans une sourate ou le marque-page d’un verset.' : 'Aucun résultat.'}</div>`;
+    body.innerHTML = html || `<div class="empty">${QS.tab === 'fav' ? 'Aucun marque-page. Touchez le marque-page en haut d’une sourate, ou celui d’un verset.' : 'Aucun résultat.'}</div>`;
   });
 }
 
@@ -99,12 +102,12 @@ function verseHtml(D, s, i) {
   let tr = '';
   if (S.trans && f) {
     tr = `<div class="vfr">${esc(f.text.replace(/^\d+\.\s*/, ''))}</div>`;
-    if (f.footnotes) tr += `<div class="vnote" id="n${n}" hidden>${esc(f.footnotes)}</div>`;
+    if (f.footnotes) tr += `<button type="button" class="vnote" id="n${n}" data-act="note" data-v="${n}" aria-label="Refermer la note" hidden>${esc(f.footnotes)}<span class="close">${I.up} Refermer</span></button>`;
   }
   return `<article class="verse${PL.s === s && PL.v === n ? ' cur' : ''}" id="v${n}" data-v="${n}">
     <div class="vtop"><span class="vnum ar" aria-label="Verset ${n}">${arNum(n)}</span><div class="vtext ar" lang="ar" dir="rtl" style="font-size:${S.size}px">${esc(a.text)}</div></div>
     ${tr}
-    <div class="vact"><button data-act="playV" data-v="${n}" aria-label="Écouter le verset ${n}">${I.play}</button><button data-act="mark" data-v="${n}" class="${on ? 'on' : ''}" aria-pressed="${on}" aria-label="Marque-page, verset ${n}">${on ? I.bookmarkOn : I.bookmark}</button>${S.trans && f && f.footnotes ? `<button data-act="note" data-v="${n}" aria-label="Notes du verset ${n}">${I.note} Notes</button>` : ''}</div>
+    <div class="vact"><button data-act="playV" data-v="${n}" aria-label="Écouter le verset ${n}">${I.play}</button><button data-act="mark" data-v="${n}" class="${on ? 'on' : ''}" aria-pressed="${on}" aria-label="Marque-page, verset ${n}">${on ? I.bookmarkOn : I.bookmark}</button>${S.trans && f && f.footnotes ? `<button class="nb" data-act="note" data-v="${n}" aria-expanded="false" aria-label="Notes du verset ${n}">${I.note} Notes</button>` : ''}</div>
   </article>`;
 }
 function buildReader(D, s, startV) {
@@ -114,7 +117,7 @@ function buildReader(D, s, startV) {
   <div class="rhead">
     <a class="icon-btn" href="javascript:history.back()" aria-label="Retour à la liste des sourates" style="margin-left:-8px">${I.back}</a>
     <div class="t"><h1>${esc(c.transliteration)}</h1><div class="sub">Sourate ${c.id} · ${chSub(c)}</div></div>
-    <button class="icon-btn${fav ? '' : ''}" data-act="fav" aria-pressed="${fav}" aria-label="${fav ? 'Retirer des favoris' : 'Ajouter aux favoris'}" style="color:${fav ? 'var(--brass-text)' : 'inherit'}">${fav ? I.starOn : I.star}</button>
+    <button class="icon-btn${fav ? '' : ''}" data-act="fav" aria-pressed="${fav}" aria-label="${fav ? 'Retirer la sourate des marque-pages' : 'Ajouter la sourate aux marque-pages'}" style="color:${fav ? 'var(--brass-text)' : 'inherit'}">${fav ? I.bookmarkOn : I.bookmark}</button>
     <span class="ar" lang="ar" dir="rtl" style="font-size:32px;line-height:1;font-weight:700;color:var(--accent)">${c.name}</span>
   </div>
   <div class="ctrls">
@@ -148,8 +151,8 @@ function reRenderReader() {
 }
 ACT.fav = el => {
   const i = S.fav.indexOf(R.s); if (i >= 0) S.fav.splice(i, 1); else S.fav.push(R.s); save();
-  const on = i < 0; el.setAttribute('aria-pressed', on); el.style.color = on ? 'var(--brass-text)' : 'inherit'; el.innerHTML = on ? I.starOn : I.star;
-  toast(on ? 'Sourate ajoutée aux favoris.' : 'Sourate retirée des favoris.');
+  const on = i < 0; el.setAttribute('aria-pressed', on); el.style.color = on ? 'var(--brass-text)' : 'inherit'; el.innerHTML = on ? I.bookmarkOn : I.bookmark;
+  toast(on ? 'Sourate ajoutée aux marque-pages.' : 'Sourate retirée des marque-pages.');
 };
 ACT.size = () => { S.size = SIZES[(SIZES.indexOf(S.size) + 1) % SIZES.length] || 28; save(); $$('.vtext').forEach(e => { e.style.fontSize = S.size + 'px'; }); };
 ACT.trans = el => { S.trans = !S.trans; save(); el.setAttribute('aria-pressed', S.trans); $('.sw', el).classList.toggle('on', S.trans); reRenderReader(); };
@@ -159,7 +162,12 @@ ACT.mark = el => {
   const on = i < 0; el.classList.toggle('on', on); el.setAttribute('aria-pressed', on); el.innerHTML = on ? I.bookmarkOn : I.bookmark;
   toast(on ? 'Marque-page ajouté.' : 'Marque-page retiré.');
 };
-ACT.note = el => { const n = $('#n' + el.dataset.v); if (n) n.hidden = !n.hidden; };
+ACT.note = el => {
+  const v = el.dataset.v, n = $('#n' + v); if (!n) return;
+  n.hidden = !n.hidden;
+  const b = $('.vact .nb[data-v="' + v + '"]');
+  if (b) { b.classList.toggle('open', !n.hidden); b.setAttribute('aria-expanded', String(!n.hidden)); }
+};
 CHG.readReciter = el => { S.reciter = el.value; save(); if (PL.s && PL.playing) playVerse(PL.s, PL.v, !PL.basm); };
 
 /* ---- Lecteur audio (EveryAyah) ---- */

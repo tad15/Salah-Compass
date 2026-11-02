@@ -34,12 +34,12 @@ V.prieres = () => {
     const tm = a.today[k], past = tm.t <= now;
     const isNext = nx.day === 0 && nx.k === k;
     if (k === 'sunrise') {
-      rows += `<div class="prow info"><span class="st">${past ? I.check : I.ring}</span><div class="nm"><b>${PNAME[k]}</b><span>Fin de la prière de Fajr</span></div><span class="tm mono">${tm.str}</span><span style="width:44px"></span></div>`;
+      rows += `<div class="prow info">${timeIcon(k, past)}<div class="nm"><b>${PNAME[k]}</b><span>Fin de la prière de Fajr</span></div><span class="tm mono">${tm.str}</span><span style="width:44px"></span></div>`;
     } else {
       const mode = S.remind ? S.modes[k] : 'off';
-      const st = isNext ? I.dot : (past ? I.check : I.ring);
+      const st = timeIcon(k, past && !isNext);
       const sub = S.remind ? MODE_LABEL[S.modes[k]] : 'Rappels désactivés';
-      rows += `<div class="prow${isNext ? ' next' : ''}"><span class="st">${st}</span><div class="nm"><b>${PNAME[k]}${k === 'dhuhr' && dw === 5 ? ' · Joumou‘a' : ''}</b><span>${sub}</span></div><span class="tm mono">${tm.str}</span><button class="bt${mode === 'off' ? ' off' : ''}" data-act="cycle" data-k="${k}" aria-label="${PNAME[k]} : ${MODE_LABEL[S.modes[k]]}. Changer">${MODE_ICON[mode]}</button></div>`;
+      rows += `<div class="prow${isNext ? ' next' : ''}">${st}<div class="nm"><b>${PNAME[k]}${k === 'dhuhr' && dw === 5 ? ' · Joumou‘a' : ''}</b><span>${sub}</span></div><span class="tm mono">${tm.str}</span><button class="bt${mode === 'off' ? ' off' : ''}" data-act="cycle" data-k="${k}" aria-label="${PNAME[k]} : ${MODE_LABEL[S.modes[k]]}. Changer">${MODE_ICON[mode]}</button></div>`;
     }
   });
   const html = `
@@ -86,6 +86,8 @@ ACT.askNotif = () => { askNotif(); toast('Autorisez les notifications dans la fe
 /* ====== Réglages ====== */
 let previewAudio = null;
 function stopPreview() { if (previewAudio) { previewAudio.pause(); previewAudio = null; } }
+let ADHAN_SHOWN = 'false';
+function adhanOn() { let v = false; try { v = NATIVE && AndroidApp.isAdhanPlaying(); } catch (e) { v = false; } ADHAN_SHOWN = String(v); return v; }
 const seg = (opts, cur, act, extra) => `<div class="seg" role="group">${opts.map(o => `<button data-act="${act}" ${extra || ''} data-v="${o[0]}" class="${String(cur) === String(o[0]) ? 'on' : ''}" aria-pressed="${String(cur) === String(o[0])}">${o[1]}</button>`).join('')}</div>`;
 const sw = (on, act, label, extra) => `<button class="switch${on ? ' on' : ''}" role="switch" aria-checked="${on}" aria-label="${label}" data-act="${act}" ${extra || ''}></button>`;
 
@@ -111,21 +113,21 @@ V.reglages = () => {
       <div class="srow2"><div class="l"><b>Rappels de prière</b><span>Interrupteur général</span></div>${sw(S.remind, 'tRemind', 'Rappels de prière')}</div>
       ${FIVE.map(k => `<div class="srow2"><div class="l"><b>${PNAME[k]}</b></div>${seg([['off', 'Aucun'], ['notif', 'Notif.'], ['adhan', 'Adhan']], S.modes[k], 'setMode', 'data-k="' + k + '"')}</div>`).join('')}
       <div class="srow2"><div class="l"><b>Prévenir avant</b><span>Notification discrète avant la prière</span></div>${seg([[0, 'Non'], [5, '5'], [10, '10'], [15, '15'], [30, '30']], S.pre, 'setPre')}</div>
-      ${NATIVE ? `<div class="srow2"><div class="l"><b>Notifications Android</b><span>${notifOk() ? 'Autorisées' : 'Bloquées — touchez pour autoriser'}</span></div>${notifOk() ? '' : '<button class="pill-btn" data-act="askNotif">Autoriser</button>'}</div>` : ''}
+      ${NATIVE ? `<div class="srow2"><div class="l"><b>Notifications Android</b><span>${notifOk() ? 'Autorisées · touchez pour gérer dans Android' : 'Bloquées · touchez pour autoriser dans Android'}</span></div>${sw(notifOk(), 'notifSettings', 'Notifications Android')}</div>` : ''}
     </div></div>
     <div class="sec"><h2>Adhan</h2><div class="card set">
       <div class="srow2"><div class="l"><b>Écouter l’adhan</b></div><button class="pill-btn" data-act="preview" id="pv">${previewAudio ? 'Arrêter' : 'Écouter'}</button></div>
       <div class="srow2"><div class="l"><b>Volume</b></div><input type="range" min="0.1" max="1" step="0.05" value="${S.vol}" data-chg="vol" aria-label="Volume de l’adhan"></div>
       <div class="srow2"><div class="l"><b>Vibration</b><span>Au début de l’adhan</span></div>${sw(S.vibrate, 'tVib', 'Vibration')}</div>
-      ${NATIVE ? `<div class="srow2"><div class="l"><b>Tester maintenant</b><span>Vérifie que le téléphone sonne bien</span></div><div style="display:flex;gap:6px"><button class="pill-btn" data-act="testN">Notif.</button><button class="pill-btn" data-act="testA">Adhan</button></div></div>` : ''}
+      ${NATIVE ? `<div class="srow2"><div class="l"><b>Tester maintenant</b><span id="testsub" class="${adhanOn() ? 'live' : ''}">${adhanOn() ? 'Adhan en cours…' : 'Vérifie que le téléphone sonne bien'}</span></div><div style="display:flex;gap:6px"><button class="pill-btn" data-act="testN">Notif.</button><button class="pill-btn${adhanOn() ? ' act' : ''}" id="testa" data-act="testA">${adhanOn() ? 'Arrêter' : 'Adhan'}</button></div></div>` : ''}
     </div></div>
     <div class="sec"><h2>Coran</h2><div class="card set">
       <div class="srow2"><div class="l"><b>Récitateur</b></div><select data-chg="reciter" aria-label="Récitateur">${RECITERS.map(r => `<option value="${r[0]}"${r[0] === S.reciter ? ' selected' : ''}>${esc(r[1])}</option>`).join('')}</select></div>
     </div></div>
     <a class="pill-btn" href="#/apropos">À propos, sources et licences</a>
-    <div class="sub" style="text-align:center">Version 2.0 · aucune publicité, aucun compte</div>
+    <div class="sub" style="text-align:center">Version 2.1 · aucune publicité, aucun compte</div>
   </div>`;
-  return { html, mount() { } };
+  return { html, mount() { }, tick() { if (NATIVE && String(adhanOn()) !== ADHAN_SHOWN) render(true); } };
 };
 ACT.tAuto = () => { S.auto = !S.auto; save(); if (S.auto) locate(() => { syncNative(); render(true); }); syncNative(); render(true); };
 ACT.locate = () => locate(ok => { toast(ok ? 'Position mise à jour.' : 'Position indisponible : autorisez la localisation.'); render(true); });
@@ -148,7 +150,11 @@ ACT.preview = () => {
   const b = $('#pv'); if (b) b.textContent = 'Arrêter';
 };
 ACT.testN = () => { try { AndroidApp.testNotification(false); } catch (e) { /* ignoré */ } };
-ACT.testA = () => { try { AndroidApp.testNotification(true); } catch (e) { /* ignoré */ } };
+ACT.testA = () => {
+  try { if (AndroidApp.isAdhanPlaying()) AndroidApp.stopAdhan(); else AndroidApp.testNotification(true); } catch (e) { /* ignoré */ }
+  setTimeout(() => render(true), 700);
+};
+ACT.notifSettings = () => { try { AndroidApp.openNotifSettings(); } catch (e) { /* ignoré */ } };
 
 /* ====== Calendrier ====== */
 let CAL = null;

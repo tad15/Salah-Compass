@@ -162,6 +162,23 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
 
         @JavascriptInterface
+        public boolean isAdhanPlaying() {
+            return AdhanService.running;
+        }
+
+        @JavascriptInterface
+        public void openNotifSettings() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, getPackageName());
+                    startActivity(i);
+                }
+            });
+        }
+
+        @JavascriptInterface
         public void stopAdhan() {
             startService(new Intent(MainActivity.this, AdhanService.class).setAction(AdhanService.ACTION_STOP));
         }

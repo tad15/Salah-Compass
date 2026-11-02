@@ -4,7 +4,7 @@ V.apropos = () => ({
   html: `
   <header class="top"><div style="display:flex;align-items:center;gap:4px;margin-left:-8px"><a class="icon-btn" href="javascript:history.back()" aria-label="Retour">${I.back}</a><h1>À propos</h1></div></header>
   <div class="about card" style="padding:16px">
-    <p><b>Boussole Qibla</b> · version 2.0. Application gratuite, sans publicité, sans compte et sans collecte de données. Vos réglages et votre position restent sur votre téléphone.</p>
+    <p><b>Boussole Qibla</b> · version 2.1. Application gratuite, sans publicité, sans compte et sans collecte de données. Vos réglages et votre position restent sur votre téléphone.</p>
     <h2>Horaires de prière</h2>
     <p>Calculés sur l’appareil à partir de votre position, selon la méthode choisie dans les réglages. Ils peuvent différer de quelques minutes de ceux de votre mosquée : en cas de doute, suivez les horaires de votre mosquée.</p>
     <h2>Texte du Coran</h2>

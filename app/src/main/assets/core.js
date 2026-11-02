@@ -40,6 +40,7 @@ const I = {
   starOn: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3 6.9 7.5.7-5.7 5-1.7-7.4L12 18l-6.5 4 1.7-7.4-5.7-5 7.5-.7z"/></svg>',
   note: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
   search: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  up: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>',
   close: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>'
 };
 
@@ -243,3 +244,21 @@ function locate(cb) {
     save(); syncNative(); if (cb) cb(true);
   }, () => { if (cb) cb(false); }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
 }
+
+/* ====== Icônes selon le moment de la journée ====== */
+const PICON = (() => {
+  const rays = (cx, cy, r1, r2, angles, color) => angles.map(a => { const t = a * Math.PI / 180; return `<path d="M${(cx + r1 * Math.cos(t)).toFixed(2)} ${(cy - r1 * Math.sin(t)).toFixed(2)}L${(cx + r2 * Math.cos(t)).toFixed(2)} ${(cy - r2 * Math.sin(t)).toFixed(2)}" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>`; }).join('');
+  const HZ = '<path d="M3 24.5h26" stroke="#22B8CF" stroke-width="2.4" stroke-linecap="round"/><path d="M9 29h14" stroke="#22B8CF" stroke-width="2.4" stroke-linecap="round"/>';
+  const Y = '#F5C518', O = '#F9A825', R = '#F2762E', ALL = [0, 45, 90, 135, 180, 225, 270, 315];
+  const wrap = x => `<svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">${x}</svg>`;
+  return {
+    fajr: wrap('<path d="M21 8.6A5.6 5.6 0 1 1 14.4 2a4.4 4.4 0 0 0 6.6 6.6z" style="fill:var(--moon)"/><path d="M11 21a5 5 0 0 1 10 0z" fill="' + Y + '"/>' + rays(16, 21, 7, 9.6, [30, 60, 90, 120, 150], Y) + HZ),
+    sunrise: wrap('<path d="M9 21.5a7 7 0 0 1 14 0z" fill="' + Y + '"/>' + rays(16, 21.5, 10, 13, [20, 50, 90, 130, 160], Y) + HZ),
+    dhuhr: wrap('<circle cx="16" cy="13" r="5.6" fill="' + Y + '"/>' + rays(16, 13, 8.6, 11.6, ALL, Y) + HZ),
+    asr: wrap('<circle cx="16" cy="14.5" r="5.6" fill="' + O + '"/>' + rays(16, 14.5, 8.6, 11.6, ALL, O) + HZ),
+    maghrib: wrap('<path d="M9.5 21.5a6.5 6.5 0 0 1 13 0z" fill="' + R + '"/>' + rays(16, 21.5, 9.5, 12.2, [25, 60, 120, 155], R) + HZ),
+    isha: wrap('<path d="M23 12.5A8.4 8.4 0 1 1 13.4 3a6.6 6.6 0 0 0 9.6 9.5z" style="fill:var(--moon)"/><path d="M24.5 6l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9z" style="fill:var(--moon)"/><path d="M26 19l.6 1.3 1.3.6-1.3.6-.6 1.3-.6-1.3-1.3-.6 1.3-.6z" style="fill:var(--moon)"/>')
+  };
+})();
+const BADGE = '<span class="bdg"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>';
+const timeIcon = (k, past) => `<span class="st${past ? ' done' : ''}"><span class="ico">${PICON[k]}</span>${past ? BADGE : ''}</span>`;

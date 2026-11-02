@@ -20,6 +20,8 @@ public class AdhanService extends Service {
     static final String ACTION_STOP = "fr.boussole.qibla.STOP_ADHAN";
     private static final int NOTIF_ID = 7;
 
+    static volatile boolean running;
+
     private MediaPlayer player;
 
     @Override
@@ -82,6 +84,7 @@ public class AdhanService extends Service {
                 }
             });
             player.start();
+            running = true;
             if (vib) {
                 Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                 if (v != null) {
@@ -96,6 +99,7 @@ public class AdhanService extends Service {
     }
 
     private void stopPlayback() {
+        running = false;
         if (player != null) {
             try {
                 player.stop();
