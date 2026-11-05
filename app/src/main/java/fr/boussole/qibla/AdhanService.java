@@ -41,6 +41,7 @@ public class AdhanService extends Service {
         if (title == null) title = "Adhan";
         if (text == null) text = "";
 
+        String stopLabel = AlarmScheduler.prefs(this).getString(AlarmScheduler.K_STOP_LABEL, "Arrêter");
         Notifs.ensureChannels(this);
         PendingIntent stop = PendingIntent.getService(this, 1,
                 new Intent(this, AdhanService.class).setAction(ACTION_STOP),
@@ -49,11 +50,12 @@ public class AdhanService extends Service {
                 .setSmallIcon(R.drawable.ic_stat)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setOngoing(true)
+                .setOngoing(false)
                 .setCategory(Notification.CATEGORY_ALARM)
-                .setContentIntent(Notifs.openApp(this))
+                .setContentIntent(Notifs.openAppAndStopAdhan(this))
+                .setDeleteIntent(stop)
                 .addAction(new Notification.Action.Builder(
-                        Icon.createWithResource(this, R.drawable.ic_stat), "Arrêter", stop).build())
+                        Icon.createWithResource(this, R.drawable.ic_stat), stopLabel, stop).build())
                 .build();
         if (Build.VERSION.SDK_INT >= 29) {
             startForeground(NOTIF_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);

@@ -103,6 +103,22 @@ public class MainActivity extends Activity implements SensorEventListener {
         });
 
         web.loadUrl("https://" + HOST + "/assets/index.html");
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    /** Toucher la notification de l'adhan coupe le son. */
+    private void handleIntent(Intent i) {
+        if (i != null && i.getBooleanExtra("stop_adhan", false)) {
+            i.removeExtra("stop_adhan");
+            startService(new Intent(this, AdhanService.class).setAction(AdhanService.ACTION_STOP));
+        }
     }
 
     /** Pont appelé depuis la page (window.AndroidApp.*). */
@@ -123,6 +139,15 @@ public class MainActivity extends Activity implements SensorEventListener {
             AlarmScheduler.prefs(MainActivity.this).edit()
                     .putFloat(AlarmScheduler.K_VOLUME, volume)
                     .putBoolean(AlarmScheduler.K_VIBRATE, vibrate)
+                    .apply();
+        }
+
+        @JavascriptInterface
+        public void setLabels(String stop, String testTitle, String testText) {
+            AlarmScheduler.prefs(MainActivity.this).edit()
+                    .putString(AlarmScheduler.K_STOP_LABEL, stop)
+                    .putString(AlarmScheduler.K_TEST_TITLE, testTitle)
+                    .putString(AlarmScheduler.K_TEST_TEXT, testText)
                     .apply();
         }
 
@@ -150,8 +175,8 @@ public class MainActivity extends Activity implements SensorEventListener {
             if (adhan) {
                 try {
                     Intent s = new Intent(MainActivity.this, AdhanService.class);
-                    s.putExtra("title", "Test de l’adhan");
-                    s.putExtra("text", "Appuyez sur Arrêter pour couper le son");
+                    s.putExtra("title", AlarmScheduler.prefs(MainActivity.this).getString(AlarmScheduler.K_TEST_TITLE, "Test de l’adhan"));
+                    s.putExtra("text", AlarmScheduler.prefs(MainActivity.this).getString(AlarmScheduler.K_TEST_TEXT, "Touchez ou balayez la notification pour couper le son"));
                     startForegroundService(s);
                 } catch (Exception e) {
                     Notifs.show(MainActivity.this, "Test", "Lecture de l’adhan impossible");

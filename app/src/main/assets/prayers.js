@@ -49,7 +49,7 @@ V.prieres = () => {
     ${permBanner()}
     <section class="hero" aria-label="${tr('Prochaine prière')}" data-nt="${nx.t}">
       <div class="lbl">${tr('Prochaine prière')}</div>
-      <div class="row"><div class="name">${PNAME[nx.k]}</div>${LANG === 'ar' ? '' : `<div class="nar ar" lang="ar" dir="rtl">${PAR[nx.k]}</div>`}</div>
+      <div class="row"><div class="name">${PNAME[nx.k]}</div>${RTL ? '' : `<div class="nar ar" lang="ar" dir="rtl">${PAR[nx.k]}</div>`}</div>
       <div class="time mono">${nx.str}${nx.day > 0 ? ' <span style="font-size:15px;color:var(--hero-text)">' + tr('demain') + '</span>' : ''}</div>
       <div class="cd" id="cd" role="timer">${cdText(nx.t - now)}</div>
       <div class="bar"><i id="pg" style="width:${prog}%"></i></div>
@@ -133,7 +133,7 @@ V.reglages = () => {
     <div style="display:flex;align-items:center;gap:4px;margin-inline-start:-8px"><a class="icon-btn flip" href="javascript:history.back()" aria-label="${tr('Retour')}">${I.back}</a><h1>${tr('Réglages')}</h1></div>
   </header>
   <div class="stack">
-    <div class="sec"><h2>${tr('Langue')}</h2>${seg(LANGS, LANG, 'setLang')}</div>
+    <div class="sec"><h2>${tr('Langue')}</h2><div class="card set"><div class="srow2"><div class="l"><b>${tr('Langue')}</b></div><select data-chg="lang" aria-label="${tr('Langue')}">${LANGS.map(l => `<option value="${l[0]}"${l[0] === LANG ? ' selected' : ''}>${l[1]}</option>`).join('')}</select></div></div></div>
     <div class="sec"><h2>${tr('Apparence')}</h2><div class="themes">${THEME_LIST.map(t => themeTile(t)).join('')}</div><div class="sub" style="padding:2px 4px;font-size:13px">${tr('« Automatique » suit le mode clair ou sombre du téléphone.')}</div></div>
     <div class="sec"><h2>${tr('Position')}</h2><div class="card set">${posRows}</div></div>
     <div class="sec"><h2>${tr('Calcul des horaires')}</h2><div class="card set">
@@ -161,7 +161,7 @@ V.reglages = () => {
   </div>`;
   return { html, mount() { }, tick() { if (NATIVE && String(adhanOn()) !== ADHAN_SHOWN) render(true); } };
 };
-ACT.setLang = el => { S.lang = el.dataset.v; save(); location.reload(); };
+CHG.lang = el => { S.lang = el.value; save(); location.reload(); };
 ACT.tAuto = () => { S.auto = !S.auto; save(); if (S.auto) locate(() => { syncNative(); render(true); }); syncNative(); render(true); };
 ACT.locate = () => locate(ok => { toast(ok ? tr('Position mise à jour.') : tr('Position indisponible : autorisez la localisation.')); render(true); });
 CHG.city = el => { S.cityIdx = +el.value; save(); syncNative(); render(true); };

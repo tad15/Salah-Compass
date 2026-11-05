@@ -235,6 +235,7 @@ function syncNative() {
   if (!NATIVE) return;
   try {
     AndroidApp.setSettings(S.vol, !!S.vibrate);
+    if (AndroidApp.setLabels) AndroidApp.setLabels(tr('Arrêter'), tr('Test de l’adhan'), tr('Touchez ou balayez la notification pour couper le son'));
     AndroidApp.setSchedule(JSON.stringify(buildSchedule()));
   } catch (e) { /* ignoré */ }
 }

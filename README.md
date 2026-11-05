@@ -2,7 +2,7 @@
 
 **Qibla compass, prayer times with adhan, Quran and Hijri calendar — in one free Android app. No ads, no account, no tracking.**
 
-🌐 English · العربية · Français &nbsp;|&nbsp; 🇫🇷 [Version française plus bas](#français)
+🌐 English · Français · العربية · Español · Deutsch · Türkçe · Bahasa Indonesia · اردو &nbsp;|&nbsp; 🇫🇷 [Version française plus bas](#français)
 
 <p align="center">
   <img src="docs/screenshots/overview.png" alt="Salah Compass screenshots" width="100%">
@@ -19,7 +19,7 @@ Get the latest APK from the **[Releases page](../../releases/latest)** (file `bo
 - Six calculation methods (UOIF France, Muslim World League, ISNA, Egypt, Umm al-Qura, Diyanet) and Standard / Hanafi Asr.
 - **Per-prayer choice**: adhan, silent notification, or off. Optional early reminder (5 to 30 minutes before).
 - Live countdown to the next prayer, with a progress bar.
-- Adhan plays even with the screen off; tap the test button again to stop it. Volume and vibration settings.
+- Adhan plays even with the screen off. **Swipe the notification away or tap it to stop the adhan** (or use the Stop button). Volume and vibration settings.
 - Animated **Kaaba courtyard** that follows the real time and your location: sun, moon phase, clouds, stars and lamps.
 - Alarms survive a phone restart.
 
@@ -55,10 +55,13 @@ Get the latest APK from the **[Releases page](../../releases/latest)** (file `bo
 <p align="center"><img src="docs/screenshots/calendar.png" alt="Calendar" width="30%"></p>
 
 ### 🎨 Languages and themes
-- **Languages:** English, Français, العربية (full right-to-left layout).
+- **8 languages:** English, Français, العربية, Español, Deutsch, Türkçe, Bahasa Indonesia, اردو — Arabic and Urdu use a full right-to-left layout. Prayer names, dates and the Hijri calendar follow the chosen language.
 - **12 themes**, all checked for readable contrast: Automatic (follows the phone), Light, Dark, Midnight blue, Light gray, Black, Off-white, Purple, Yellow, Pink, Sky blue, Ocean.
 
-<p align="center"><img src="docs/screenshots/themes.png" alt="Language and theme settings" width="30%"></p>
+<p align="center">
+  <img src="docs/screenshots/themes.png" alt="Language and theme settings" width="30%">
+  <img src="docs/screenshots/turkish.png" alt="Turkish interface, yellow theme" width="30%">
+</p>
 
 ## Privacy
 
@@ -67,7 +70,7 @@ No ads, no account, no analytics. Your settings and your location stay on your p
 ## Good to know
 
 - Calculated prayer times can differ by a few minutes from your local mosque. When in doubt, follow your mosque.
-- Quran translations: English and French only for now (the Arabic interface shows the French one).
+- Quran translations: French (French and Arabic interface) and English (all other languages) for now.
 - Reminders and the adhan need the notification permission (and exact alarms) on Android.
 
 ## Sources and licences
@@ -95,11 +98,11 @@ To build locally: `./gradlew assembleDebug` (JDK 17 and the Android SDK are requ
 **Télécharger :** [dernière version (APK)](../../releases/latest), fichier `boussole-qibla.apk`.
 
 **Fonctionnalités**
-- **Prières** : horaires calculés sur le téléphone, six méthodes (dont UOIF), Asr standard ou hanafite ; au choix pour chaque prière : adhan, notification ou désactivé ; rappel avant la prière ; compte à rebours ; scène animée de la Kaaba qui suit l'heure et le lieu.
+- **Prières** : horaires calculés sur le téléphone, six méthodes (dont UOIF), Asr standard ou hanafite ; au choix pour chaque prière : adhan, notification ou désactivé ; rappel avant la prière ; compte à rebours ; l'adhan s'arrête en touchant ou en balayant la notification ; scène animée de la Kaaba qui suit l'heure et le lieu.
 - **Qibla** : boussole avec capteurs du téléphone, angle exact et distance, heures de La Mecque et de France.
-- **Coran** : 114 sourates en arabe avec traduction française (ou anglaise si l'application est en anglais) verset par verset et notes, recherche, Juz’, marque-pages, récitation verset par verset.
+- **Coran** : 114 sourates en arabe avec traduction française (anglaise pour les langues autres que le français et l'arabe) verset par verset et notes, recherche, Juz’, marque-pages, récitation verset par verset.
 - **Calendrier hégirien** avec ajustement de la date et horaires du jour sélectionné.
-- **Langues** : français, anglais, arabe (interface de droite à gauche) ; **12 thèmes** lisibles.
+- **8 langues** : français, anglais, arabe, espagnol, allemand, turc, indonésien, ourdou (arabe et ourdou de droite à gauche) ; **12 thèmes** lisibles.
 
 **Confidentialité** : aucune donnée collectée ; réglages et position restent sur le téléphone. Seule la récitation du Coran utilise Internet.
 

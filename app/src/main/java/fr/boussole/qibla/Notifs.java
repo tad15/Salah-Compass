@@ -30,6 +30,14 @@ final class Notifs {
         return PendingIntent.getActivity(c, 0, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
+    /** Ouvre l'application ET coupe l'adhan (toucher la notification suffit à l'arrêter). */
+    static PendingIntent openAppAndStopAdhan(Context c) {
+        Intent i = new Intent(c, MainActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                .putExtra("stop_adhan", true);
+        return PendingIntent.getActivity(c, 2, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
     static void show(Context c, String title, String text) {
         ensureChannels(c);
         NotificationManager nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);

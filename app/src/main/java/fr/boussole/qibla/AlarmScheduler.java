@@ -18,6 +18,9 @@ public final class AlarmScheduler {
     static final String K_LAST = "last_fired";
     static final String K_VOLUME = "volume";
     static final String K_VIBRATE = "vibrate";
+    static final String K_STOP_LABEL = "stop_label";
+    static final String K_TEST_TITLE = "test_title";
+    static final String K_TEST_TEXT = "test_text";
 
     private AlarmScheduler() {}
 

@@ -92,7 +92,7 @@ V.qibla = () => {
   const html = `
   <header class="top">
     <div style="display:flex;flex-direction:column;gap:2px"><h1>${tr('Qibla')}</h1><div class="sub">${esc(L.name)}</div></div>
-    ${LANG === 'ar' ? '' : '<span class="ar" lang="ar" dir="rtl" style="font-size:36px;line-height:1;font-weight:700;color:var(--accent)">القبلة</span>'}
+    ${RTL ? '' : '<span class="ar" lang="ar" dir="rtl" style="font-size:36px;line-height:1;font-weight:700;color:var(--accent)">القبلة</span>'}
   </header>
   <div class="stack">
     <section class="card compass" aria-label="${tr('Boussole')}">

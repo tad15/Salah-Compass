@@ -1,16 +1,17 @@
 'use strict';
 /* ====== Langues : français (source), anglais, arabe ====== */
-const APP_VERSION = '2.6';
-const LANGS = [['fr', 'Français'], ['en', 'English'], ['ar', 'العربية']];
+const APP_VERSION = '2.7';
+const LANGS = [['fr', 'Français'], ['en', 'English'], ['ar', 'العربية'], ['es', 'Español'], ['de', 'Deutsch'], ['tr', 'Türkçe'], ['id', 'Bahasa Indonesia'], ['ur', 'اردو']];
+const LANG_CODES = LANGS.map(l => l[0]);
 const LANG = (() => {
   let l = null;
   try { l = (JSON.parse(localStorage.getItem('qs') || '{}')).lang; } catch (e) { l = null; }
-  if (l === 'fr' || l === 'en' || l === 'ar') return l;
+  if (LANG_CODES.indexOf(l) >= 0) return l;
   const n = String(navigator.language || 'fr').slice(0, 2).toLowerCase();
-  return n === 'en' || n === 'ar' ? n : 'fr';
+  return LANG_CODES.indexOf(n) >= 0 ? n : 'fr';
 })();
-const RTL = LANG === 'ar';
-const LOCALE = { fr: 'fr-FR', en: 'en-GB', ar: 'ar' }[LANG];
+const RTL = LANG === 'ar' || LANG === 'ur';
+const LOCALE = { fr: 'fr-FR', en: 'en-GB', ar: 'ar', es: 'es-ES', de: 'de-DE', tr: 'tr-TR', id: 'id-ID', ur: 'ur-PK' }[LANG];
 document.documentElement.lang = LANG;
 document.documentElement.dir = RTL ? 'rtl' : 'ltr';
 
@@ -19,7 +20,7 @@ const DICT = {};
 function K(fr, en, ar) { DICT[fr] = { en, ar }; }
 function tr(k) {
   let s = k;
-  if (LANG !== 'fr') { const d = DICT[k]; if (d && d[LANG] != null) s = d[LANG]; }
+  if (LANG !== 'fr') { const d = DICT[k]; if (d) s = d[LANG] != null ? d[LANG] : (d.en != null ? d.en : k); }
   for (let i = 1; i < arguments.length; i++) s = s.split('{' + (i - 1) + '}').join(arguments[i]);
   return s;
 }
@@ -53,7 +54,12 @@ K('Ma position', 'My location', 'موقعي');
 const PNAMES = {
   fr: { fajr: 'Fajr', sunrise: 'Lever du soleil', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Isha' },
   en: { fajr: 'Fajr', sunrise: 'Sunrise', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Isha' },
-  ar: { fajr: 'الفجر', sunrise: 'الشروق', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء' }
+  ar: { fajr: 'الفجر', sunrise: 'الشروق', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء' },
+  es: { fajr: 'Fajr', sunrise: 'Amanecer', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Magrib', isha: 'Isha' },
+  de: { fajr: 'Fadschr', sunrise: 'Sonnenaufgang', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Ischa' },
+  tr: { fajr: 'İmsak', sunrise: 'Güneş', dhuhr: 'Öğle', asr: 'İkindi', maghrib: 'Akşam', isha: 'Yatsı' },
+  id: { fajr: 'Subuh', sunrise: 'Terbit', dhuhr: 'Zuhur', asr: 'Asar', maghrib: 'Magrib', isha: 'Isya' },
+  ur: { fajr: 'فجر', sunrise: 'طلوعِ آفتاب', dhuhr: 'ظہر', asr: 'عصر', maghrib: 'مغرب', isha: 'عشاء' }
 };
 K('{0} dans {1} min', '{0} in {1} min', '{0} بعد {1} دقيقة');
 K('Prière de {0} à {1} ({2})', '{0} prayer at {1} ({2})', 'صلاة {0} عند {1} ({2})');
@@ -140,6 +146,8 @@ K('Volume', 'Volume', 'مستوى الصوت');
 K('Volume de l’adhan', 'Adhan volume', 'مستوى صوت الأذان');
 K('Vibration', 'Vibration', 'الاهتزاز');
 K('Au début de l’adhan', 'At the start of the adhan', 'عند بدء الأذان');
+K('Test de l’adhan', 'Adhan test', 'اختبار الأذان');
+K('Touchez ou balayez la notification pour couper le son', 'Tap or swipe the notification to stop the sound', 'المس الإشعار أو اسحبه لإيقاف الصوت');
 K('Tester maintenant', 'Test now', 'اختبار الآن');
 K('Adhan en cours…', 'Adhan playing…', 'الأذان قيد التشغيل…');
 K('Vérifie que le téléphone sonne bien', 'Checks that the phone rings properly', 'يتأكد من أن الهاتف يصدر الصوت');
