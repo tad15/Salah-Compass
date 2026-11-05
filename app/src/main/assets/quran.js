@@ -9,7 +9,7 @@ const RECITERS = [
 const SIZES = [24, 28, 34, 40];
 let QD = null;
 // Traduction affichée : celle de la langue choisie quand elle existe, français pour l'arabe.
-const TL = LANG === 'ar' ? 'fr' : LANG;
+const TL = LANG === 'ar' ? null : LANG;   // en arabe : pas de traduction (le Coran est déjà en arabe)
 const TL_RTL = TL === 'ur';
 /* Crédits de chaque traduction (QuranEnc.com : texte et notes affichés sans modification). */
 const TRANS_INFO = {
@@ -20,14 +20,14 @@ const TRANS_INFO = {
   tr: { name: 'Dr. Ali Ozek and others', ver: '1.0.0' },
   id: { name: 'Ministry of Religious Affairs', ver: '1.0.1' },
   ur: { name: 'Muhammad Junagarhi', ver: '1.1.3' }
-}[TL];
+}[TL] || { name: '', ver: '' };
 const TL_NUMBERED = TL === 'fr' || TL === 'en' || TL === 'es';   // ces fichiers commencent par le numéro du verset
 function loadQuran() {
   if (!QD) {
     QD = Promise.all([
       fetch('data/chapters.json').then(r => r.json()),
       fetch('data/quran-ar.json').then(r => r.json()),
-      fetch('data/quran-' + TL + '.json').then(r => r.json())
+      (TL ? fetch('data/quran-' + TL + '.json').then(r => r.json()) : Promise.resolve({}))
     ]).then(([c, a, f]) => ({ ch: c.chapters, juz: c.indexes.juzs, ar: a, fr: f }))
       .catch(e => { QD = null; throw e; });
   }
@@ -40,7 +40,7 @@ let QS = { tab: 'sourates', q: '' };
 
 V.coran = () => {
   const html = `
-  <header class="top"><div><h1>${tr('Coran')}</h1><div class="sub">${tr('114 sourates · texte arabe et traduction')}</div></div></header>
+  <header class="top"><div><h1>${tr('Coran')}</h1><div class="sub">${tr(TL ? '114 sourates · texte arabe et traduction' : '114 sourates · texte arabe')}</div></div></header>
   <div class="stack">
     <div id="resume"></div>
     <label class="search">${I.search}<input id="qsearch" type="search" placeholder="${tr('Rechercher une sourate')}" value="${esc(QS.q)}" aria-label="${tr('Rechercher une sourate')}" autocomplete="off"></label>
@@ -136,11 +136,11 @@ function buildReader(D, s, startV) {
   </div>
   <div class="ctrls">
     <button class="pill-btn" data-act="size"><span class="ar" aria-hidden="true" style="font-size:18px;font-weight:700">أ</span>${tr('Taille du texte')}</button>
-    <button class="pill-btn" data-act="trans" aria-pressed="${S.trans}"><span class="sw${S.trans ? ' on' : ''}"></span>${tr('Traduction')}</button>
+    ${TL ? `<button class="pill-btn" data-act="trans" aria-pressed="${S.trans}"><span class="sw${S.trans ? ' on' : ''}"></span>${tr('Traduction')}</button>` : ''}
   </div>
   <select class="sel" data-chg="readReciter" aria-label="${tr('Récitateur')}">${RECITERS.map(r => `<option value="${r[0]}"${r[0] === S.reciter ? ' selected' : ''}>${tr('Récitation : {0}', esc(r[1]))}</option>`).join('')}</select>
   <section class="card verses" aria-label="${tr('Texte de la sourate')}">${verses}</section>
-  <div class="sub" style="margin-top:12px;font-size:12px">${tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : {0}, via QuranEnc.com. ', TRANS_INFO.name)}<a href="#/apropos" style="text-decoration:underline">${tr('Détails')}</a></div>`;
+  <div class="sub" style="margin-top:12px;font-size:12px">${TL ? tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : {0}, via QuranEnc.com. ', TRANS_INFO.name) : tr('Texte arabe : Tanzil.net (licence CC BY 3.0). ')}<a href="#/apropos" style="text-decoration:underline">${tr('Détails')}</a></div>`;
   if (!S.last || S.last.s !== s || startV) S.last = { s, v: startV || 1 };
   save();
   const view = $('#view');

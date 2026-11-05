@@ -1,6 +1,6 @@
 'use strict';
 /* ====== Langues : français (source), anglais, arabe ====== */
-const APP_VERSION = '2.8';
+const APP_VERSION = '2.9';
 const LANGS = [['fr', 'Français'], ['en', 'English'], ['ar', 'العربية'], ['es', 'Español'], ['de', 'Deutsch'], ['tr', 'Türkçe'], ['id', 'Bahasa Indonesia'], ['ur', 'اردو']];
 const LANG_CODES = LANGS.map(l => l[0]);
 const LANG = (() => {

@@ -37,7 +37,7 @@ Get the latest APK from the **[Releases page](../../releases/latest)** (file `bo
 <p align="center"><img src="docs/screenshots/qibla.png" alt="Qibla compass" width="30%"></p>
 
 ### 📖 Quran
-- All 114 surahs in the Arabic text, with a **translation in your language** shown verse by verse (with footnotes you can open and close): English, French, Spanish, German, Turkish, Indonesian or Urdu (the Arabic interface shows the French one).
+- All 114 surahs in the Arabic text, with a **translation in your language** shown verse by verse (with footnotes you can open and close): English, French, Spanish, German, Turkish, Indonesian or Urdu. In the Arabic interface the translation is hidden, since the Quran is read in its original Arabic.
 - Search by surah name or number, browse by Juz’, resume where you stopped.
 - **Bookmarks** for surahs and individual verses.
 - **Verse-by-verse recitation** (several reciters), with a mini player; it continues automatically to the next verse.
@@ -46,7 +46,12 @@ Get the latest APK from the **[Releases page](../../releases/latest)** (file `bo
 <p align="center">
   <img src="docs/screenshots/quran.png" alt="Surah list" width="30%">
   <img src="docs/screenshots/reader.png" alt="Reading a surah" width="30%">
+  <img src="docs/screenshots/arabic-reader.png" alt="Arabic interface: Arabic text only, no translation" width="30%">
 </p>
+
+The translation follows the app language — here Spanish, German, Turkish and Urdu:
+
+<p align="center"><img src="docs/screenshots/translations.png" alt="Quran translations in Spanish, German, Turkish and Urdu" width="100%"></p>
 
 ### 📅 Hijri calendar
 - Month view with the Hijri day under every date, Fridays marked, and the prayer times of any selected day.
@@ -56,6 +61,8 @@ Get the latest APK from the **[Releases page](../../releases/latest)** (file `bo
 
 ### 🎨 Languages and themes
 - **8 languages:** English, Français, العربية, Español, Deutsch, Türkçe, Bahasa Indonesia, اردو — Arabic and Urdu use a full right-to-left layout. Prayer names, dates and the Hijri calendar follow the chosen language.
+
+<p align="center"><img src="docs/screenshots/languages.png" alt="The app in French, English, Arabic, Spanish, German, Turkish, Indonesian and Urdu" width="100%"></p>
 - **12 themes**, all checked for readable contrast: Automatic (follows the phone), Light, Dark, Midnight blue, Light gray, Black, Off-white, Purple, Yellow, Pink, Sky blue, Ocean.
 
 <p align="center">
@@ -70,7 +77,7 @@ No ads, no account, no analytics. Your settings and your location stay on your p
 ## Good to know
 
 - Calculated prayer times can differ by a few minutes from your local mosque. When in doubt, follow your mosque.
-- Quran translations exist for 7 of the 8 languages; the Arabic interface shows the French translation.
+- Quran translations exist for 7 of the 8 languages. The Arabic interface shows the Arabic text only, with no translation.
 - Reminders and the adhan need the notification permission (and exact alarms) on Android.
 
 ## Sources and licences
@@ -100,7 +107,7 @@ To build locally: `./gradlew assembleDebug` (JDK 17 and the Android SDK are requ
 **Fonctionnalités**
 - **Prières** : horaires calculés sur le téléphone, six méthodes (dont UOIF), Asr standard ou hanafite ; au choix pour chaque prière : adhan, notification ou désactivé ; rappel avant la prière ; compte à rebours ; l'adhan s'arrête en touchant ou en balayant la notification ; scène animée de la Kaaba qui suit l'heure et le lieu.
 - **Qibla** : boussole avec capteurs du téléphone, angle exact et distance, heures de La Mecque et de France.
-- **Coran** : 114 sourates en arabe avec traduction verset par verset dans votre langue (français, anglais, espagnol, allemand, turc, indonésien, ourdou ; l'arabe affiche la française) et notes, recherche, Juz’, marque-pages, récitation verset par verset.
+- **Coran** : 114 sourates en arabe avec traduction verset par verset dans votre langue (français, anglais, espagnol, allemand, turc, indonésien, ourdou ; en arabe, texte arabe seul, sans traduction) et notes, recherche, Juz’, marque-pages, récitation verset par verset.
 - **Calendrier hégirien** avec ajustement de la date et horaires du jour sélectionné.
 - **8 langues** : français, anglais, arabe, espagnol, allemand, turc, indonésien, ourdou (arabe et ourdou de droite à gauche) ; **12 thèmes** lisibles.
 
