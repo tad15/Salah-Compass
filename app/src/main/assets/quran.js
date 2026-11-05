@@ -8,7 +8,20 @@ const RECITERS = [
 ];
 const SIZES = [24, 28, 34, 40];
 let QD = null;
-const TL = (LANG === 'fr' || LANG === 'ar') ? 'fr' : 'en';   // traduction affichée : français (fr, ar) sinon anglais
+// Traduction affichée : celle de la langue choisie quand elle existe, français pour l'arabe.
+const TL = LANG === 'ar' ? 'fr' : LANG;
+const TL_RTL = TL === 'ur';
+/* Crédits de chaque traduction (QuranEnc.com : texte et notes affichés sans modification). */
+const TRANS_INFO = {
+  fr: { name: 'Dr Nabil Rudwan, Noor International Center', ver: '1.0.0' },
+  en: { name: 'Noor International Center', ver: '1.1.2' },
+  es: { name: 'Noor International Center (Latin American Spanish)', ver: '1.0.1' },
+  de: { name: 'Frank Bubenheim', ver: '1.1.4' },
+  tr: { name: 'Dr. Ali Ozek and others', ver: '1.0.0' },
+  id: { name: 'Ministry of Religious Affairs', ver: '1.0.1' },
+  ur: { name: 'Muhammad Junagarhi', ver: '1.1.3' }
+}[TL];
+const TL_NUMBERED = TL === 'fr' || TL === 'en' || TL === 'es';   // ces fichiers commencent par le numéro du verset
 function loadQuran() {
   if (!QD) {
     QD = Promise.all([
@@ -27,7 +40,7 @@ let QS = { tab: 'sourates', q: '' };
 
 V.coran = () => {
   const html = `
-  <header class="top"><div><h1>${tr('Coran')}</h1><div class="sub">${tr('114 sourates · texte arabe et traduction française')}</div></div></header>
+  <header class="top"><div><h1>${tr('Coran')}</h1><div class="sub">${tr('114 sourates · texte arabe et traduction')}</div></div></header>
   <div class="stack">
     <div id="resume"></div>
     <label class="search">${I.search}<input id="qsearch" type="search" placeholder="${tr('Rechercher une sourate')}" value="${esc(QS.q)}" aria-label="${tr('Rechercher une sourate')}" autocomplete="off"></label>
@@ -102,8 +115,8 @@ function verseHtml(D, s, i) {
   const key = s + ':' + n, on = S.marks.includes(key);
   let trn = '';
   if (S.trans && f) {
-    trn = `<div class="vfr" lang="${TL}" dir="ltr">${esc(f.text.replace(/^\(?\d+[.)]\s*/, ''))}</div>`;
-    if (f.footnotes) trn += `<button type="button" class="vnote" lang="${TL}" dir="ltr" id="n${n}" data-act="note" data-v="${n}" aria-label="${tr('Refermer la note')}" hidden>${esc(f.footnotes)}<span class="close">${I.up} ${tr('Refermer')}</span></button>`;
+    trn = `<div class="vfr" lang="${TL}" dir="${TL_RTL ? 'rtl' : 'ltr'}">${esc(TL_NUMBERED ? f.text.replace(/^\(?\d+[.)]\s*/, '') : f.text)}</div>`;
+    if (f.footnotes) trn += `<button type="button" class="vnote" lang="${TL}" dir="${TL_RTL ? 'rtl' : 'ltr'}" id="n${n}" data-act="note" data-v="${n}" aria-label="${tr('Refermer la note')}" hidden>${esc(f.footnotes)}<span class="close">${I.up} ${tr('Refermer')}</span></button>`;
   }
   return `<article class="verse${PL.s === s && PL.v === n ? ' cur' : ''}" id="v${n}" data-v="${n}">
     <div class="vtop"><span class="vnum ar" aria-label="${tr('Verset {0}', n)}">${arNum(n)}</span><div class="vtext ar" lang="ar" dir="rtl" style="font-size:${S.size}px">${esc(a.text)}</div></div>
@@ -127,7 +140,7 @@ function buildReader(D, s, startV) {
   </div>
   <select class="sel" data-chg="readReciter" aria-label="${tr('Récitateur')}">${RECITERS.map(r => `<option value="${r[0]}"${r[0] === S.reciter ? ' selected' : ''}>${tr('Récitation : {0}', esc(r[1]))}</option>`).join('')}</select>
   <section class="card verses" aria-label="${tr('Texte de la sourate')}">${verses}</section>
-  <div class="sub" style="margin-top:12px;font-size:12px">${TL === 'en' ? tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction anglaise : Noor International Center, via QuranEnc.com. ') : tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : Dr Nabil Rudwan, Noor International Center, via QuranEnc.com. ')}<a href="#/apropos" style="text-decoration:underline">${tr('Détails')}</a></div>`;
+  <div class="sub" style="margin-top:12px;font-size:12px">${tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : {0}, via QuranEnc.com. ', TRANS_INFO.name)}<a href="#/apropos" style="text-decoration:underline">${tr('Détails')}</a></div>`;
   if (!S.last || S.last.s !== s || startV) S.last = { s, v: startV || 1 };
   save();
   const view = $('#view');

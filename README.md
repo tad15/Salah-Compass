@@ -37,7 +37,7 @@ Get the latest APK from the **[Releases page](../../releases/latest)** (file `bo
 <p align="center"><img src="docs/screenshots/qibla.png" alt="Qibla compass" width="30%"></p>
 
 ### 📖 Quran
-- All 114 surahs in the Arabic text, with a **translation** shown verse by verse (with footnotes you can open and close): **English** when the app is in English, **French** otherwise (French and Arabic interface).
+- All 114 surahs in the Arabic text, with a **translation in your language** shown verse by verse (with footnotes you can open and close): English, French, Spanish, German, Turkish, Indonesian or Urdu (the Arabic interface shows the French one).
 - Search by surah name or number, browse by Juz’, resume where you stopped.
 - **Bookmarks** for surahs and individual verses.
 - **Verse-by-verse recitation** (several reciters), with a mini player; it continues automatically to the next verse.
@@ -70,14 +70,14 @@ No ads, no account, no analytics. Your settings and your location stay on your p
 ## Good to know
 
 - Calculated prayer times can differ by a few minutes from your local mosque. When in doubt, follow your mosque.
-- Quran translations: French (French and Arabic interface) and English (all other languages) for now.
+- Quran translations exist for 7 of the 8 languages; the Arabic interface shows the French translation.
 - Reminders and the adhan need the notification permission (and exact alarms) on Android.
 
 ## Sources and licences
 
 - **Arabic Quran text:** [Tanzil Project](https://tanzil.net) — CC BY 3.0, text unmodified.
 - **French translation:** Dr Nabil Rudwan, Noor International Center (v1.0.0), via [QuranEnc.com](https://quranenc.com) — text displayed unmodified.
-- **English translation:** Noor International Center (v1.1.2), via [QuranEnc.com](https://quranenc.com) — text displayed unmodified.
+- **English:** Noor International Center (v1.1.2) · **Spanish:** Noor International Center, Latin American Spanish (v1.0.1) · **German:** Frank Bubenheim (v1.1.4) · **Turkish:** Dr. Ali Ozek and others (v1.0.0) · **Indonesian:** Ministry of Religious Affairs (v1.0.1) · **Urdu:** Muhammad Junagarhi (v1.1.3) — all via [QuranEnc.com](https://quranenc.com), text and notes displayed unmodified.
 - **Recitations:** streamed from [everyayah.com](https://everyayah.com), not stored in the app. Rights belong to the reciters.
 - **Quran data format:** [risan/quran-json](https://github.com/risan/quran-json) (CC BY-SA 4.0).
 - The Kaaba illustration and the app icon are original drawings made for this project.
@@ -100,7 +100,7 @@ To build locally: `./gradlew assembleDebug` (JDK 17 and the Android SDK are requ
 **Fonctionnalités**
 - **Prières** : horaires calculés sur le téléphone, six méthodes (dont UOIF), Asr standard ou hanafite ; au choix pour chaque prière : adhan, notification ou désactivé ; rappel avant la prière ; compte à rebours ; l'adhan s'arrête en touchant ou en balayant la notification ; scène animée de la Kaaba qui suit l'heure et le lieu.
 - **Qibla** : boussole avec capteurs du téléphone, angle exact et distance, heures de La Mecque et de France.
-- **Coran** : 114 sourates en arabe avec traduction française (anglaise pour les langues autres que le français et l'arabe) verset par verset et notes, recherche, Juz’, marque-pages, récitation verset par verset.
+- **Coran** : 114 sourates en arabe avec traduction verset par verset dans votre langue (français, anglais, espagnol, allemand, turc, indonésien, ourdou ; l'arabe affiche la française) et notes, recherche, Juz’, marque-pages, récitation verset par verset.
 - **Calendrier hégirien** avec ajustement de la date et horaires du jour sélectionné.
 - **8 langues** : français, anglais, arabe, espagnol, allemand, turc, indonésien, ourdou (arabe et ourdou de droite à gauche) ; **12 thèmes** lisibles.
 

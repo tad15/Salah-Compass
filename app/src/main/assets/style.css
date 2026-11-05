@@ -230,7 +230,6 @@ nav#nav a.on .ic{background:var(--tint)}
 .flipn svg{transform:scaleX(-1)}
 html[dir="rtl"] .flip svg{transform:scaleX(-1)}
 html[dir="rtl"] .flipn svg{transform:none}
-html[dir="rtl"] .vfr,html[dir="rtl"] .vnote{text-align:left}
 html[dir="rtl"] .bigdeg,html[dir="rtl"] .clock .z{direction:ltr}
 html[dir="rtl"] .clock .z{text-align:start;unicode-bidi:plaintext;direction:ltr}
 .sec > .seg button{flex:1 1 auto}
