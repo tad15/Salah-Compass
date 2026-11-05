@@ -19,7 +19,7 @@ function cdText(ms) {
 function permBanner() {
   if (!NATIVE) return '<div class="banner">' + tr('Les rappels et l’adhan fonctionnent uniquement dans l’application Android installée.') + '</div>';
   if (!S.remind) return '<div class="banner">' + tr('Les rappels sont désactivés.') + '<button class="pill-btn" data-act="go" data-to="#/reglages">' + tr('Ouvrir les réglages') + '</button></div>';
-  if (!notifOk()) return '<div class="banner">' + tr('Les notifications sont bloquées : sans elles, aucun rappel ni adhan ne sera joué.') + '<button class="pill-btn" data-act="askNotif">' + tr('Autoriser les notifications') + '</button><span class="sub">' + tr('Si rien ne s’affiche, autorisez-les dans Réglages Android › Applications › Boussole Qibla › Notifications.') + '</span></div>';
+  if (!notifOk()) return '<div class="banner">' + tr('Les notifications sont bloquées : sans elles, aucun rappel ni adhan ne sera joué.') + '<button class="pill-btn" data-act="askNotif">' + tr('Autoriser les notifications') + '</button><span class="sub">' + tr('Si rien ne s’affiche, autorisez-les dans Réglages Android › Applications › Salah Compass › Notifications.') + '</span></div>';
   return '';
 }
 

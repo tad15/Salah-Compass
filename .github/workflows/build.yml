@@ -53,6 +53,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-${{ github.run_number }}
-          name: Boussole Qibla (build ${{ github.run_number }})
+          name: Salah Compass (build ${{ github.run_number }})
           files: boussole-qibla.apk
           make_latest: true

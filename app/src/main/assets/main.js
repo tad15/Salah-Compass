@@ -4,7 +4,7 @@ V.apropos = () => ({
   html: `
   <header class="top"><div style="display:flex;align-items:center;gap:4px;margin-inline-start:-8px"><a class="icon-btn flip" href="javascript:history.back()" aria-label="${tr('Retour')}">${I.back}</a><h1>${tr('À propos')}</h1></div></header>
   <div class="about card" style="padding:16px">
-    <p>${tr('<b>Boussole Qibla</b> · version {0}. Application gratuite, sans publicité, sans compte et sans collecte de données. Vos réglages et votre position restent sur votre téléphone.', APP_VERSION)}</p>
+    <p>${tr('<b>Salah Compass</b> · version {0}. Application gratuite, sans publicité, sans compte et sans collecte de données. Vos réglages et votre position restent sur votre téléphone.', APP_VERSION)}</p>
     <h2>${tr('Horaires de prière')}</h2>
     <p>${tr('Calculés sur l’appareil à partir de votre position, selon la méthode choisie dans les réglages. Ils peuvent différer de quelques minutes de ceux de votre mosquée : en cas de doute, suivez les horaires de votre mosquée.')}</p>
     <h2>${tr('Texte du Coran')}</h2>

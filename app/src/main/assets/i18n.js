@@ -1,6 +1,6 @@
 'use strict';
 /* ====== Langues : français (source), anglais, arabe ====== */
-const APP_VERSION = '2.4';
+const APP_VERSION = '2.5';
 const LANGS = [['fr', 'Français'], ['en', 'English'], ['ar', 'العربية']];
 const LANG = (() => {
   let l = null;
@@ -76,7 +76,7 @@ K('Les rappels sont désactivés.', 'Reminders are turned off.', 'التذكير
 K('Ouvrir les réglages', 'Open settings', 'فتح الإعدادات');
 K('Les notifications sont bloquées : sans elles, aucun rappel ni adhan ne sera joué.', 'Notifications are blocked: without them, no reminder or adhan will play.', 'الإشعارات محظورة: بدونها لن يعمل أي تذكير أو أذان.');
 K('Autoriser les notifications', 'Allow notifications', 'السماح بالإشعارات');
-K('Si rien ne s’affiche, autorisez-les dans Réglages Android › Applications › Boussole Qibla › Notifications.', 'If nothing appears, allow them in Android Settings › Apps › Boussole Qibla › Notifications.', 'إن لم يظهر شيء، اسمح بها من إعدادات أندرويد › التطبيقات › Boussole Qibla › الإشعارات.');
+K('Si rien ne s’affiche, autorisez-les dans Réglages Android › Applications › Salah Compass › Notifications.', 'If nothing appears, allow them in Android Settings › Apps › Salah Compass › Notifications.', 'إن لم يظهر شيء، اسمح بها من إعدادات أندرويد › التطبيقات › Salah Compass › الإشعارات.');
 K('Autorisez les notifications dans la fenêtre Android.', 'Allow notifications in the Android window.', 'اسمح بالإشعارات في نافذة أندرويد.');
 K('Cour de la Kaaba, de nuit', 'Courtyard of the Kaaba, at night', 'ساحة الكعبة ليلًا');
 K('Cour de la Kaaba, au crépuscule', 'Courtyard of the Kaaba, at dusk', 'ساحة الكعبة عند الغروب');
@@ -229,9 +229,9 @@ K('Arrêter la récitation', 'Stop the recitation', 'إيقاف التلاوة')
 
 /* ---- À propos ---- */
 K('À propos', 'About', 'حول التطبيق');
-K('<b>Boussole Qibla</b> · version {0}. Application gratuite, sans publicité, sans compte et sans collecte de données. Vos réglages et votre position restent sur votre téléphone.',
-  '<b>Boussole Qibla</b> · version {0}. Free app, no ads, no account and no data collection. Your settings and your location stay on your phone.',
-  '<b>Boussole Qibla</b> · الإصدار {0}. تطبيق مجاني بلا إعلانات ولا حساب ولا جمع للبيانات. تبقى إعداداتك وموقعك على هاتفك.');
+K('<b>Salah Compass</b> · version {0}. Application gratuite, sans publicité, sans compte et sans collecte de données. Vos réglages et votre position restent sur votre téléphone.',
+  '<b>Salah Compass</b> · version {0}. Free app, no ads, no account and no data collection. Your settings and your location stay on your phone.',
+  '<b>Salah Compass</b> · الإصدار {0}. تطبيق مجاني بلا إعلانات ولا حساب ولا جمع للبيانات. تبقى إعداداتك وموقعك على هاتفك.');
 K('Horaires de prière', 'Prayer times', 'مواقيت الصلاة');
 K('Calculés sur l’appareil à partir de votre position, selon la méthode choisie dans les réglages. Ils peuvent différer de quelques minutes de ceux de votre mosquée : en cas de doute, suivez les horaires de votre mosquée.',
   'Calculated on the device from your location, using the method chosen in settings. They may differ by a few minutes from those of your mosque: if in doubt, follow your mosque’s times.',
@@ -250,7 +250,7 @@ K('Données utilisées', 'Data used', 'البيانات المستخدمة');
 K('Mise en forme des données du Coran : projet {0} (CC BY-SA 4.0).', 'Formatting of the Quran data: project {0} (CC BY-SA 4.0).', 'تنسيق بيانات القرآن: مشروع {0} (CC BY-SA 4.0).');
 
 /* ---- Éléments statiques de la page ---- */
-document.title = 'Boussole Qibla';
+document.title = 'Salah Compass';
 (function () {
   const p = document.getElementById('player'); if (p) p.setAttribute('aria-label', tr('Récitation'));
   const n = document.getElementById('nav'); if (n) n.setAttribute('aria-label', tr('Navigation principale'));
