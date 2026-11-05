@@ -8,12 +8,13 @@ const RECITERS = [
 ];
 const SIZES = [24, 28, 34, 40];
 let QD = null;
+const TL = LANG === 'en' ? 'en' : 'fr';   // langue de la traduction affichée
 function loadQuran() {
   if (!QD) {
     QD = Promise.all([
       fetch('data/chapters.json').then(r => r.json()),
       fetch('data/quran-ar.json').then(r => r.json()),
-      fetch('data/quran-fr.json').then(r => r.json())
+      fetch('data/quran-' + TL + '.json').then(r => r.json())
     ]).then(([c, a, f]) => ({ ch: c.chapters, juz: c.indexes.juzs, ar: a, fr: f }))
       .catch(e => { QD = null; throw e; });
   }
@@ -101,8 +102,8 @@ function verseHtml(D, s, i) {
   const key = s + ':' + n, on = S.marks.includes(key);
   let trn = '';
   if (S.trans && f) {
-    trn = `<div class="vfr" lang="fr" dir="ltr">${esc(f.text.replace(/^\d+\.\s*/, ''))}</div>`;
-    if (f.footnotes) trn += `<button type="button" class="vnote" lang="fr" dir="ltr" id="n${n}" data-act="note" data-v="${n}" aria-label="${tr('Refermer la note')}" hidden>${esc(f.footnotes)}<span class="close">${I.up} ${tr('Refermer')}</span></button>`;
+    trn = `<div class="vfr" lang="${TL}" dir="ltr">${esc(f.text.replace(/^\(?\d+[.)]\s*/, ''))}</div>`;
+    if (f.footnotes) trn += `<button type="button" class="vnote" lang="${TL}" dir="ltr" id="n${n}" data-act="note" data-v="${n}" aria-label="${tr('Refermer la note')}" hidden>${esc(f.footnotes)}<span class="close">${I.up} ${tr('Refermer')}</span></button>`;
   }
   return `<article class="verse${PL.s === s && PL.v === n ? ' cur' : ''}" id="v${n}" data-v="${n}">
     <div class="vtop"><span class="vnum ar" aria-label="${tr('Verset {0}', n)}">${arNum(n)}</span><div class="vtext ar" lang="ar" dir="rtl" style="font-size:${S.size}px">${esc(a.text)}</div></div>
@@ -126,7 +127,7 @@ function buildReader(D, s, startV) {
   </div>
   <select class="sel" data-chg="readReciter" aria-label="${tr('Récitateur')}">${RECITERS.map(r => `<option value="${r[0]}"${r[0] === S.reciter ? ' selected' : ''}>${tr('Récitation : {0}', esc(r[1]))}</option>`).join('')}</select>
   <section class="card verses" aria-label="${tr('Texte de la sourate')}">${verses}</section>
-  <div class="sub" style="margin-top:12px;font-size:12px">${tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : Dr Nabil Rudwan, Noor International Center, via QuranEnc.com. ')}<a href="#/apropos" style="text-decoration:underline">${tr('Détails')}</a></div>`;
+  <div class="sub" style="margin-top:12px;font-size:12px">${LANG === 'en' ? tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction anglaise : Noor International Center, via QuranEnc.com. ') : tr('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : Dr Nabil Rudwan, Noor International Center, via QuranEnc.com. ')}<a href="#/apropos" style="text-decoration:underline">${tr('Détails')}</a></div>`;
   if (!S.last || S.last.s !== s || startV) S.last = { s, v: startV || 1 };
   save();
   const view = $('#view');

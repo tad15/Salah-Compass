@@ -1,6 +1,6 @@
 'use strict';
 /* ====== Langues : français (source), anglais, arabe ====== */
-const APP_VERSION = '2.5';
+const APP_VERSION = '2.6';
 const LANGS = [['fr', 'Français'], ['en', 'English'], ['ar', 'العربية']];
 const LANG = (() => {
   let l = null;
@@ -180,7 +180,7 @@ K('Mecquoise', 'Meccan', 'مكية');
 K('Médinoise', 'Medinan', 'مدنية');
 K('{0} verset', '{0} verse', '{0} آية');
 K('{0} versets', '{0} verses', '{0} آية');
-K('114 sourates · texte arabe et traduction française', '114 surahs · Arabic text and French translation', '114 سورة · النص العربي والترجمة الفرنسية');
+K('114 sourates · texte arabe et traduction française', '114 surahs · Arabic text and English translation', '114 سورة · النص العربي والترجمة الفرنسية');
 K('Rechercher une sourate', 'Search for a surah', 'ابحث عن سورة');
 K('Sourates', 'Surahs', 'السور');
 K('Juz’', 'Juz’', 'الأجزاء');
@@ -207,10 +207,11 @@ K('Sourate {0}', 'Surah {0}', 'السورة {0}');
 K('Retirer la sourate des marque-pages', 'Remove the surah from bookmarks', 'إزالة السورة من العلامات');
 K('Ajouter la sourate aux marque-pages', 'Add the surah to bookmarks', 'إضافة السورة إلى العلامات');
 K('Taille du texte', 'Text size', 'حجم الخط');
-K('Traduction', 'Translation (French)', 'الترجمة (الفرنسية)');
+K('Traduction', 'Translation', 'الترجمة (الفرنسية)');
 K('Récitation : {0}', 'Recitation: {0}', 'التلاوة: {0}');
 K('Texte de la sourate', 'Text of the surah', 'نص السورة');
 K('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction : Dr Nabil Rudwan, Noor International Center, via QuranEnc.com. ', 'Arabic text: Tanzil.net (CC BY 3.0 licence). Translation: Dr Nabil Rudwan, Noor International Center, via QuranEnc.com. ', 'النص العربي: Tanzil.net (رخصة CC BY 3.0). الترجمة: د. نبيل رضوان، مركز نور الدولي، عبر QuranEnc.com. ');
+K('Texte arabe : Tanzil.net (licence CC BY 3.0). Traduction anglaise : Noor International Center, via QuranEnc.com. ', 'Arabic text: Tanzil.net (CC BY 3.0 licence). English translation: Noor International Center, via QuranEnc.com. ', '');
 K('Détails', 'Details', 'التفاصيل');
 K('Sourate ajoutée aux marque-pages.', 'Surah added to bookmarks.', 'أُضيفت السورة إلى العلامات.');
 K('Sourate retirée des marque-pages.', 'Surah removed from bookmarks.', 'أُزيلت السورة من العلامات.');
@@ -239,6 +240,8 @@ K('Calculés sur l’appareil à partir de votre position, selon la méthode cho
 K('Texte du Coran', 'Quran text', 'نص القرآن');
 K('Texte arabe (écriture ‘uthmani) : projet', 'Arabic text (‘Uthmani script): project', 'النص العربي (الرسم العثماني): مشروع');
 K('Traduction française', 'French translation', 'الترجمة الفرنسية');
+K('Traduction anglaise', 'English translation', 'الترجمة الإنجليزية');
+K('Traduction publiée par le Noor International Center (version 1.1.2), fournie par {0}. Le texte et les notes de la traduction sont affichés sans modification (seul le numéro de verset placé en tête de chaque verset est retiré à l’affichage, puisqu’il apparaît déjà dans le médaillon).', 'Translation published by the Noor International Center (version 1.1.2), provided by {0}. The text and notes of the translation are displayed unmodified (only the verse number at the start of each verse is hidden, since it already appears in the medallion).', '');
 K('Traduction du Dr Nabil Rudwan, publiée par le Noor International Center (version 1.0.0), fournie par {0}. Le texte et les notes de la traduction sont affichés sans modification (seul le numéro de verset placé en tête de chaque verset est retiré à l’affichage, puisqu’il apparaît déjà dans le médaillon).',
   'Translation by Dr Nabil Rudwan, published by the Noor International Center (version 1.0.0), provided by {0}. The text and notes of the translation are displayed unmodified (only the verse number at the start of each verse is hidden, since it already appears in the medallion).',
   'ترجمة د. نبيل رضوان، نشرها مركز نور الدولي (الإصدار 1.0.0)، وتوفّرها {0}. يُعرض نص الترجمة وملاحظاتها دون تعديل (يُحذف فقط رقم الآية في بداية كل آية لأنه ظاهر في الدائرة).');
